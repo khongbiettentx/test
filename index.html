@@ -1,1417 +1,665 @@
 <!DOCTYPE html>
 <html lang="vi">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ôn Thi Tiếng Anh 2 (DHEN08) - 100 Câu Hỏi Tương Tác</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ôn Thi Tiếng Anh 2 – DHEN08 | 200 Câu Trắc Nghiệm</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --card: #22263a;
+    --border: #2e3350;
+    --accent: #6c8eff;
+    --accent2: #a78bfa;
+    --correct: #34d399;
+    --wrong: #f87171;
+    --text: #e2e8f0;
+    --muted: #8892b0;
+    --tag-bg: #1e2640;
+    --radius: 12px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #1a1d27 0%, #0f1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 24px;
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+  .header-inner {
+    max-width: 900px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+  }
+  .header-title { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+  .header-sub { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+  .btn {
+    padding: 8px 16px; border-radius: 8px; border: none;
+    font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all .2s;
+  }
+  .btn-ghost {
+    background: var(--tag-bg); color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--border); }
+  .btn-primary {
+    background: var(--accent); color: #fff;
+  }
+  .btn-primary:hover { opacity: .85; }
+
+  /* HERO */
+  .hero {
+    max-width: 900px; margin: 0 auto;
+    padding: 40px 24px 24px;
+    text-align: center;
+  }
+  .hero h1 {
+    font-size: 2rem; font-weight: 800;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+  }
+  .hero p { color: var(--muted); font-size: 0.9rem; }
+
+  /* STATS BAR */
+  .stats-bar {
+    max-width: 900px; margin: 0 auto 20px;
+    padding: 0 24px;
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .stat-chip {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 18px;
+    display: flex; flex-direction: column; align-items: center;
+    flex: 1; min-width: 100px;
+  }
+  .stat-num { font-size: 1.4rem; font-weight: 800; color: var(--accent); }
+  .stat-lbl { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+
+  /* PROGRESS BAR */
+  .progress-wrap {
+    max-width: 900px; margin: 0 auto 8px; padding: 0 24px;
+  }
+  .progress-track {
+    height: 6px; background: var(--border); border-radius: 99px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 99px; transition: width .4s ease;
+  }
+  .progress-text {
+    font-size: 0.75rem; color: var(--muted); margin-top: 4px; text-align: right;
+  }
+
+  /* FILTERS */
+  .filters {
+    max-width: 900px; margin: 0 auto 24px; padding: 0 24px;
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .filter-btn {
+    padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);
+    background: var(--tag-bg); color: var(--muted);
+    font-size: 0.78rem; cursor: pointer; transition: all .2s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: var(--accent); color: #fff; border-color: var(--accent);
+  }
+
+  /* QUESTIONS */
+  .questions-list {
+    max-width: 900px; margin: 0 auto; padding: 0 24px 80px;
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .qcard {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 20px 22px;
+    transition: border-color .2s;
+  }
+  .qcard.answered-correct { border-color: var(--correct); }
+  .qcard.answered-wrong { border-color: var(--wrong); }
+  .qcard.hidden { display: none; }
+
+  .q-meta {
+    display: flex; gap: 8px; align-items: center; margin-bottom: 10px; flex-wrap: wrap;
+  }
+  .q-num {
+    font-size: 0.72rem; font-weight: 700; color: var(--accent);
+    background: rgba(108,142,255,.12); padding: 3px 9px; border-radius: 6px;
+  }
+  .q-unit {
+    font-size: 0.72rem; color: var(--muted);
+    background: var(--tag-bg); padding: 3px 9px; border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .q-topic {
+    font-size: 0.72rem; color: var(--accent2);
+    background: rgba(167,139,250,.08); padding: 3px 9px; border-radius: 6px;
+  }
+
+  .q-text {
+    font-size: 1rem; font-weight: 500; color: var(--text);
+    margin-bottom: 14px; line-height: 1.7;
+  }
+  .q-text em { color: var(--accent); font-style: normal; font-weight: 600; }
+
+  .options {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .option {
+    padding: 10px 15px; border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text); font-size: 0.88rem;
+    cursor: pointer; transition: all .18s; text-align: left;
+  }
+  .option:hover:not(.disabled) { border-color: var(--accent); background: rgba(108,142,255,.08); }
+  .option.correct { background: rgba(52,211,153,.12); border-color: var(--correct); color: var(--correct); }
+  .option.wrong { background: rgba(248,113,113,.10); border-color: var(--wrong); color: var(--wrong); }
+  .option.disabled { cursor: default; }
+
+  .q-feedback {
+    margin-top: 12px; font-size: 0.83rem; color: var(--muted);
+    background: var(--tag-bg); border-radius: 8px; padding: 9px 13px;
+    border-left: 3px solid var(--accent); display: none;
+  }
+  .q-feedback.show { display: block; }
+  .q-feedback.correct-fb { border-color: var(--correct); }
+  .q-feedback.wrong-fb { border-color: var(--wrong); }
+
+  /* RESULT BANNER */
+  .result-banner {
+    max-width: 900px; margin: 0 auto 16px; padding: 0 24px;
+    display: none;
+  }
+  .result-inner {
+    background: linear-gradient(135deg, var(--card), var(--surface));
+    border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 28px; text-align: center;
+  }
+  .result-score {
+    font-size: 3rem; font-weight: 900;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .result-msg { font-size: 1rem; color: var(--muted); margin-top: 6px; }
+
+  /* BACK TO TOP */
+  .fab {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 50%; width: 46px; height: 46px;
+    font-size: 1.2rem; cursor: pointer; box-shadow: var(--shadow);
+    transition: opacity .2s; display: none; z-index: 999;
+  }
+  .fab:hover { opacity: .85; }
+
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 1.4rem; }
+    .header-title { font-size: 0.95rem; }
+    .stat-num { font-size: 1.1rem; }
+  }
+</style>
 </head>
+<body>
 
-<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col transition-colors duration-300">
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="header-title">🎓 DHEN08 – Tiếng Anh 2</div>
+      <div class="header-sub">Học viện Công nghệ Bưu chính Viễn thông • 200 Câu Trắc Nghiệm</div>
+    </div>
+    <div class="header-actions">
+      <button class="btn btn-ghost" onclick="resetAll()">↺ Làm lại</button>
+      <button class="btn btn-primary" onclick="scrollToResult()">Xem điểm</button>
+    </div>
+  </div>
+</header>
 
-    <!-- Header -->
-    <header class="bg-gradient-to-r from-blue-700 to-indigo-800 text-white shadow-md">
-        <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div>
-                <span class="bg-indigo-600 text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">Học
-                    viện Công nghệ Bưu chính Viễn thông</span>
-                <h1 class="text-2xl md:text-3xl font-bold mt-1">Đại Luyện Tập: 100 Câu Trắc Nghiệm Tiếng Anh 2</h1>
-                <p class="text-indigo-200 text-sm mt-1">Mã khóa học: DHEN08 • Giáo trình & Đề cương Chuẩn chỉnh</p>
-            </div>
-            <div class="flex items-center gap-3">
-                <button id="themeToggle"
-                    class="p-2 rounded-lg bg-indigo-900/40 hover:bg-indigo-900/60 border border-indigo-500/30 transition-all text-sm flex items-center gap-2">
-                    🌓 Chế độ tối
-                </button>
-                <button id="resetBtn"
-                    class="bg-red-500 hover:bg-red-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-all shadow-sm">
-                    Làm lại từ đầu
-                </button>
-            </div>
-        </div>
-    </header>
+<div class="hero">
+  <h1>200 Câu Luyện Tập Cuối Kỳ</h1>
+  <p>Từ vựng & Ngữ pháp tổng hợp 15 Unit theo đề cương DHEN08 • Trả lời để xem giải thích ngay</p>
+</div>
 
-    <!-- Dashboard & Stats -->
-    <section class="max-w-6xl mx-auto w-full px-4 mt-6">
-        <div
-            class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div class="flex flex-col">
-                <span class="text-xs text-slate-500 font-medium uppercase">Tiến trình của bạn</span>
-                <div class="flex items-baseline gap-2 mt-1">
-                    <span id="answeredCount" class="text-3xl font-bold text-blue-600">0</span>
-                    <span class="text-slate-400">/ 100 câu</span>
-                </div>
-                <div class="w-full bg-slate-100 h-2 rounded-full mt-2 overflow-hidden">
-                    <div id="progressBar" class="bg-blue-600 h-full w-0 transition-all duration-300"></div>
-                </div>
-            </div>
-            <div class="flex flex-col">
-                <span class="text-xs text-slate-500 font-medium uppercase">Tỉ lệ chính xác</span>
-                <span id="accuracyVal" class="text-3xl font-bold text-emerald-600 mt-1">0%</span>
-                <span class="text-xs text-slate-400 mt-1" id="correctRatioText">Chưa có câu trả lời</span>
-            </div>
-            <div class="flex flex-col col-span-1 md:col-span-2">
-                <span class="text-xs text-slate-500 font-medium uppercase">Bộ lọc chủ đề nhanh</span>
-                <div class="flex flex-wrap gap-2 mt-2" id="filterContainer">
-                    <button
-                        class="filter-btn active bg-blue-100 text-blue-800 border-blue-200 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all"
-                        data-filter="all">Tất cả (100)</button>
-                    <button
-                        class="filter-btn bg-slate-100 text-slate-600 border-slate-200 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all"
-                        data-filter="group1">Unit 1 - 5 (33)</button>
-                    <button
-                        class="filter-btn bg-slate-100 text-slate-600 border-slate-200 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all"
-                        data-filter="group2">Unit 6 - 10 (33)</button>
-                    <button
-                        class="filter-btn bg-slate-100 text-slate-600 border-slate-200 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all"
-                        data-filter="group3">Unit 11 - 15 (28)</button>
-                    <button
-                        class="filter-btn bg-slate-100 text-slate-600 border-slate-200 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all"
-                        data-filter="specs">Đề thi & Rubrics (6)</button>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- Stats -->
+<div class="stats-bar">
+  <div class="stat-chip"><div class="stat-num" id="s-total">200</div><div class="stat-lbl">Tổng câu</div></div>
+  <div class="stat-chip"><div class="stat-num" id="s-done">0</div><div class="stat-lbl">Đã làm</div></div>
+  <div class="stat-chip"><div class="stat-num" id="s-correct">0</div><div class="stat-lbl">Đúng ✓</div></div>
+  <div class="stat-chip"><div class="stat-num" id="s-acc">0%</div><div class="stat-lbl">Chính xác</div></div>
+</div>
 
-    <!-- Main Content Area -->
-    <main class="max-w-6xl mx-auto w-full px-4 py-8 flex-grow">
-        <!-- Search bar -->
-        <div class="mb-6 flex gap-3">
-            <input type="text" id="searchInput" placeholder="Tìm kiếm câu hỏi, từ vựng hoặc điểm ngữ pháp..."
-                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm">
-        </div>
+<!-- Progress -->
+<div class="progress-wrap">
+  <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+  <div class="progress-text" id="prog-text">0 / 200 câu</div>
+</div>
 
-        <!-- Question List Container -->
-        <div class="space-y-6" id="questionsWrapper">
-            <!-- Questions loaded via JS -->
-        </div>
+<!-- Filters -->
+<div class="filters">
+  <button class="filter-btn active" onclick="filterBy('all',this)">Tất cả (200)</button>
+  <button class="filter-btn" onclick="filterBy('1-3',this)">Unit 1–3</button>
+  <button class="filter-btn" onclick="filterBy('4-6',this)">Unit 4–6</button>
+  <button class="filter-btn" onclick="filterBy('7-9',this)">Unit 7–9</button>
+  <button class="filter-btn" onclick="filterBy('10-12',this)">Unit 10–12</button>
+  <button class="filter-btn" onclick="filterBy('13-15',this)">Unit 13–15</button>
+  <button class="filter-btn" onclick="filterBy('grammar',this)">📚 Ngữ pháp</button>
+  <button class="filter-btn" onclick="filterBy('vocab',this)">📖 Từ vựng</button>
+</div>
 
-        <!-- Floating Footer Action -->
-        <div class="mt-8 text-center bg-slate-100 p-6 rounded-2xl border border-slate-200/60">
-            <h3 class="font-bold text-lg text-slate-700">Đã làm xong bài thi thử?</h3>
-            <p class="text-sm text-slate-500 mt-1">Hệ thống tự động chấm điểm và lưu tiến trình trực tiếp trên trình
-                duyệt của bạn.</p>
-            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
-                class="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-all shadow-sm">
-                Kéo lên xem điểm số 🔝
-            </button>
-        </div>
-    </main>
+<!-- Result banner (hidden until answered all) -->
+<div class="result-banner" id="result-banner">
+  <div class="result-inner">
+    <div class="result-score" id="result-score">–</div>
+    <div class="result-msg" id="result-msg"></div>
+    <button class="btn btn-primary" style="margin-top:16px" onclick="resetAll()">↺ Làm lại từ đầu</button>
+  </div>
+</div>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-6 text-center border-t border-slate-800 text-xs">
-        <p>© 2026 PTIT English Revision Kit (DHEN08). Thiết kế và phân loại phục vụ sinh viên ôn thi cuối kỳ.</p>
-        <p class="mt-1 text-slate-600">Ứng dụng hoạt động offline và không thu thập bất kỳ dữ liệu cá nhân nào.</p>
-    </footer>
+<!-- Questions -->
+<div class="questions-list" id="questions-list"></div>
 
-    <script>
-        // 100 Questions Database
-        const questionsData = [
-            // UNIT 1: Emotions (1-6)
-            {
-                id: 1,
-                group: "group1",
-                unit: "Unit 1: Emotions",
-                q: "While I ________ in the garden yesterday afternoon, I suddenly hurt my back.",
-                options: ["am working", "was working", "worked", "have worked"],
-                ans: 1,
-                hint: "Diễn tả hành động nền đang diễn ra liên tục tại thời điểm quá khứ thì hành động khác cắt ngang.",
-                explain: "Công thức kết hợp thì: While + S + was/were V-ing, S + V2/ed. Hành động đang làm vườn xảy ra liên tục thì việc bị đau lưng xen vào."
-            },
-            {
-                id: 2,
-                group: "group1",
-                unit: "Unit 1: Emotions",
-                q: "Yesterday, I was cooking dinner while my younger sister ________ the dishes.",
-                options: ["is washing", "was washing", "washed", "has washed"],
-                ans: 1,
-                hint: "Hai hành động xảy ra song song, đồng thời tại một thời điểm trong quá khứ.",
-                explain: "Sử dụng Quá khứ tiếp diễn ở cả hai vế khi có từ nối 'while' diễn tả hành động xảy ra đồng thời."
-            },
-            {
-                id: 3,
-                group: "group1",
-                unit: "Unit 1: Emotions",
-                q: "The patient doctor remained incredibly ________ even though the emergency situation was stressful.",
-                options: ["nervous", "calm", "lonely", "surprised"],
-                ans: 1,
-                hint: "Từ vựng Unit 1 chỉ trạng thái tĩnh tâm, kiên nhẫn.",
-                explain: "Calm (bình tĩnh) phù hợp nhất với ngữ cảnh bác sĩ kiên nhẫn (patient) dù tình hình khẩn cấp căng thẳng."
-            },
-            {
-                id: 4,
-                group: "group1",
-                unit: "Unit 1: Emotions",
-                q: "I always feel ________ before taking an oral final test because I am afraid of speaking in public.",
-                options: ["relaxed", "nervous", "smart", "bored"],
-                ans: 1,
-                hint: "Cảm xúc lo lắng, bồn chồn trước khi thi cử.",
-                explain: "Nervous (lo lắng, hồi hộp) phản ánh đúng tâm lý sợ nói trước công chúng của người thi."
-            },
-            {
-                id: 5,
-                group: "group1",
-                unit: "Unit 1: Emotions",
-                q: "She was completely ________ to see her old roommate at the annual event last night.",
-                options: ["surprised", "patient", "tired", "bored"],
-                ans: 0,
-                hint: "Cảm xúc ngạc nhiên, sửng sốt khi bất ngờ gặp ai đó.",
-                explain: "Surprised (ngạc nhiên, bất ngờ) phù hợp với ngữ cảnh bất ngờ gặp lại bạn cũ."
-            },
-            {
-                id: 6,
-                group: "group1",
-                unit: "Unit 1: Emotions",
-                q: "He didn't have any friends in the new school, so he felt very ________ during the first semester.",
-                options: ["excited", "calm", "lonely", "relaxed"],
-                ans: 2,
-                hint: "Trạng thái cô đơn khi không có bạn bè bên cạnh.",
-                explain: "Lonely (cô đơn, cô độc) khớp với hoàn cảnh không có bạn bè tại trường mới."
-            },
-            // UNIT 2: Making excuses (7-12)
-            {
-                id: 7,
-                group: "group1",
-                unit: "Unit 2: Making excuses",
-                q: "He decided ________ to the clinic because he had a sharp pain in his back.",
-                options: ["go", "to go", "going", "went"],
-                ans: 1,
-                hint: "Công thức cấu trúc động từ nguyên thể có 'to' sau động từ chính.",
-                explain: "Cấu trúc: decide + to V (quyết định làm gì)."
-            },
-            {
-                id: 8,
-                group: "group1",
-                unit: "Unit 2: Making excuses",
-                q: "The dentist advised me ________ my teeth at least twice a day to prevent tooth decay.",
-                options: ["brushing", "brush", "to brush", "brushed"],
-                ans: 2,
-                hint: "Cấu trúc khuyên bảo ai đó làm gì: advise someone...",
-                explain: "Cấu trúc: advise + someone + to V (khuyên ai đó làm gì)."
-            },
-            {
-                id: 9,
-                group: "group1",
-                unit: "Unit 2: Making excuses",
-                q: "The nurse gave me a small ________ to reduce my high body temperature.",
-                options: ["pain", "pill", "dentist", "tooth"],
-                ans: 1,
-                hint: "Vật phẩm y tế dạng nén dùng để uống.",
-                explain: "Pill (viên thuốc) dùng uống để hạ nhiệt độ cơ thể khi bị sốt."
-            },
-            {
-                id: 10,
-                group: "group1",
-                unit: "Unit 2: Making excuses",
-                q: "The doctor had to ________ on the patient immediately to save his life after the bad accident.",
-                options: ["operate", "brush", "pain", "fever"],
-                ans: 0,
-                hint: "Hành động phẫu thuật ngoại khoa của bác sĩ.",
-                explain: "Operate + on (phẫu thuật cho ai đó)."
-            },
-            {
-                id: 11,
-                group: "group1",
-                unit: "Unit 2: Making excuses",
-                q: "I have a terrible ________; I cannot study or focus on anything because my head hurts.",
-                options: ["headache", "fever", "tooth", "pill"],
-                ans: 0,
-                hint: "Chứng đau đầu.",
-                explain: "Headache (đau đầu) tương thích với biểu hiện 'my head hurts'."
-            },
-            {
-                id: 12,
-                group: "group1",
-                unit: "Unit 2: Making excuses",
-                q: "They suggest ________ a short break to recover from the high fever.",
-                options: ["to take", "taking", "take", "taken"],
-                ans: 1,
-                hint: "Sau động từ suggest chia dạng động từ nào?",
-                explain: "Cấu trúc: suggest + V-ing (gợi ý/ đề xuất làm việc gì)."
-            },
-            // UNIT 3: Tickets, please! (13-18)
-            {
-                id: 13,
-                group: "group1",
-                unit: "Unit 3: Tickets, please!",
-                q: "You should avoid ________ near the front row of the cinema auditorium.",
-                options: ["to sit", "sitting", "sit", "sat"],
-                ans: 1,
-                hint: "Động từ đặc biệt 'avoid' yêu cầu động từ theo sau chia dạng gì?",
-                explain: "Cấu trúc: avoid + V-ing (tránh làm việc gì)."
-            },
-            {
-                id: 14,
-                group: "group1",
-                unit: "Unit 3: Tickets, please!",
-                q: "The friendly ________ guided the guests to their specific aisle seats.",
-                options: ["musician", "orchestra", "usher", "audition"],
-                ans: 2,
-                hint: "Người dẫn chỗ ngồi tại rạp hát/ rạp phim.",
-                explain: "Usher (nhân viên dẫn chỗ) có nhiệm vụ dẫn lối cho khách vào ghế ngồi."
-            },
-            {
-                id: 15,
-                group: "group1",
-                unit: "Unit 3: Tickets, please!",
-                q: "The stage ________ rose slowly, revealing the famous musician on stage.",
-                options: ["curtain", "program", "auditorium", "audition"],
-                ans: 0,
-                hint: "Tấm màn sân khấu bằng vải dày.",
-                explain: "Curtain (màn sân khấu/ rèm) kéo lên báo hiệu buổi diễn bắt đầu."
-            },
-            {
-                id: 16,
-                group: "group1",
-                unit: "Unit 3: Tickets, please!",
-                q: "My sister hates ________ in long queues just to get a concert program ticket.",
-                options: ["to wait", "waiting", "wait", "waited"],
-                ans: 1,
-                hint: "Động từ chỉ thái độ yêu/ghét 'hate' đi kèm dạng nào?",
-                explain: "Hate + V-ing diễn tả sự không thích làm việc gì mang tính thói quen lâu dài."
-            },
-            {
-                id: 17,
-                group: "group1",
-                unit: "Unit 3: Tickets, please!",
-                q: "It is exciting ________ to a live classical orchestra performance.",
-                options: ["to listen", "listening", "listen", "listened"],
-                ans: 0,
-                hint: "Cấu trúc chủ ngữ giả: It + be + adj...",
-                explain: "Công thức: It + be + adj + to V (Thật là thế nào để làm việc gì)."
-            },
-            {
-                id: 18,
-                group: "group1",
-                unit: "Unit 3: Tickets, please!",
-                q: "They enjoy ________ new musicians during the television audition.",
-                options: ["to watch", "watching", "watch", "watched"],
-                ans: 1,
-                hint: "Sau động từ enjoy chia động từ ở dạng nào?",
-                explain: "Cấu trúc: enjoy + V-ing (thích thú làm gì)."
-            },
-            // UNIT 4: Saving energy (19-24)
-            {
-                id: 19,
-                group: "group1",
-                unit: "Unit 4: Saving energy",
-                q: "If we use renewable energy, we ________ reduce carbon emissions.",
-                options: ["would", "will", "are", "have"],
-                ans: 1,
-                hint: "Câu điều kiện loại 1 diễn tả sự việc có khả năng xảy ra ở hiện tại/tương lai.",
-                explain: "Cấu trúc: If + S + V(s/es), S + will/can + V."
-            },
-            {
-                id: 20,
-                group: "group1",
-                unit: "Unit 4: Saving energy",
-                q: "If you heat ice, it ________ into water.",
-                options: ["melts", "will melt", "melted", "would melt"],
-                ans: 0,
-                hint: "Câu điều kiện loại 0 diễn tả chân lý, sự thật khoa học hiển nhiên.",
-                explain: "Cấu trúc loại 0: If + S + V(s/es), S + V(s/es). Cả hai vế đều chia Hiện tại Đơn."
-            },
-            {
-                id: 21,
-                group: "group1",
-                unit: "Unit 4: Saving energy",
-                q: "Remember to ________ all electrical appliances before leaving the room.",
-                options: ["waste", "unplug", "save", "efficient"],
-                ans: 1,
-                hint: "Hành động rút phích cắm điện của các thiết bị.",
-                explain: "Unplug (rút phích cắm) giúp ngăn dòng điện rò rỉ và tiết kiệm điện."
-            },
-            {
-                id: 22,
-                group: "group1",
-                unit: "Unit 4: Saving energy",
-                q: "We should buy energy-________ lightbulbs to save on our electricity bills.",
-                options: ["waste", "renewable", "efficient", "efficiently"],
-                ans: 2,
-                hint: "Từ ghép: 'energy-...' nghĩa là tiết kiệm năng lượng.",
-                explain: "Energy-efficient (hiệu quả năng lượng/ tiết kiệm điện) là tính từ ghép chuẩn."
-            },
-            {
-                id: 23,
-                group: "group1",
-                unit: "Unit 4: Saving energy",
-                q: "Fossil fuels are ________ resources, so we must find alternative solutions.",
-                options: ["renewable", "unplugged", "limited", "efficient"],
-                ans: 2,
-                hint: "Tài nguyên hóa thạch như than, dầu có giới hạn và sẽ cạn kiệt.",
-                explain: "Limited (giới hạn, hữu hạn) đặc trưng cho nhiên liệu hóa thạch không thể tái tạo."
-            },
-            {
-                id: 24,
-                group: "group1",
-                unit: "Unit 4: Saving energy",
-                q: "If people keep wasting electricity, their bills ________ higher.",
-                options: ["get", "will get", "got", "would get"],
-                ans: 1,
-                hint: "Mối liên hệ nhân quả có thể xảy ra ở tương lai (Điều kiện loại 1).",
-                explain: "If S + V(present), S + will + V. Mệnh đề chính dùng 'will get'."
-            },
-            // UNIT 5: Knowing a second language (25-30)
-            {
-                id: 25,
-                group: "group1",
-                unit: "Unit 5: Knowing a second language",
-                q: "Being ________ means you can speak two languages fluently.",
-                options: ["monolingual", "bilingual", "multilingual", "native speaker"],
-                ans: 1,
-                hint: "Tiền tố 'bi-' tương ứng với con số 2.",
-                explain: "Bilingual (song ngữ) là khả năng sử dụng trôi chảy hai ngôn ngữ."
-            },
-            {
-                id: 26,
-                group: "group1",
-                unit: "Unit 5: Knowing a second language",
-                q: "Currently, she ________ hard to improve her English vocabulary.",
-                options: ["studies", "is studying", "studied", "has studied"],
-                ans: 1,
-                hint: "Từ nhận biết 'Currently' (hiện nay) chỉ một hành động đang tiến triển.",
-                explain: "Thì Hiện tại Tiếp diễn diễn tả trạng thái hoặc hành động đang xảy ra xung quanh thời điểm nói."
-            },
-            {
-                id: 27,
-                group: "group1",
-                unit: "Unit 5: Knowing a second language",
-                q: "He is a ________ speaker of Japanese; he was born and raised in Tokyo.",
-                options: ["culture", "formal", "native", "bilingual"],
-                ans: 2,
-                hint: "Người nói tiếng mẹ đẻ từ nhỏ tại địa phương.",
-                explain: "Native speaker (người bản xứ) là người nói ngôn ngữ tự nhiên từ lúc sinh ra."
-            },
-            {
-                id: 28,
-                group: "group1",
-                unit: "Unit 5: Knowing a second language",
-                q: "English is used as a ________ language in major international academic conferences.",
-                options: ["informal", "monolingual", "formal", "personality"],
-                ans: 2,
-                hint: "Ngôn ngữ trang trọng, chuẩn mực, đối lập với informal.",
-                explain: "Formal language (ngôn ngữ trang trọng) được dùng trong môi trường học thuật, công sở."
-            },
-            {
-                id: 29,
-                group: "group1",
-                unit: "Unit 5: Knowing a second language",
-                q: "They ________ to the United Kingdom every summer to practice their speaking skills.",
-                options: ["go", "are going", "went", "have gone"],
-                ans: 0,
-                hint: "Hành động lặp đi lặp lại như thói quen hàng năm (every summer).",
-                explain: "Thì Hiện tại Đơn diễn tả thói quen, lịch trình đều đặn."
-            },
-            {
-                id: 30,
-                group: "group1",
-                unit: "Unit 5: Knowing a second language",
-                q: "My sister ________ a language course in France two years ago.",
-                options: ["took", "takes", "is taking", "has taken"],
-                ans: 0,
-                hint: "Dấu hiệu thời gian kết thúc hoàn toàn trong quá khứ 'two years ago'.",
-                explain: "Thì Quá khứ Đơn dùng cho hành động bắt đầu và chấm dứt rõ ràng trong quá khứ."
-            },
-            // UNIT 6: Education (31-36)
-            {
-                id: 31,
-                group: "group2",
-                unit: "Unit 6: Education",
-                q: "I ________ the university entrance exam three times so far.",
-                options: ["took", "have taken", "take", "am taking"],
-                ans: 1,
-                hint: "Dấu hiệu 'so far' (cho đến nay) chỉ số lần trải nghiệm tích lũy.",
-                explain: "Thì Hiện tại Hoàn thành dùng để diễn tả trải nghiệm, tần suất tích lũy tính đến hiện tại."
-            },
-            {
-                id: 32,
-                group: "group2",
-                unit: "Unit 6: Education",
-                q: "To get this job, you must have a bachelor's ________ in business management.",
-                options: ["degree", "diploma", "grade", "homework"],
-                ans: 0,
-                hint: "Học vị đại học nhận được sau 4 năm học.",
-                explain: "Bachelor's degree (bằng cử nhân đại học). Diploma thường là bằng cấp ngắn hạn/ nghề."
-            },
-            {
-                id: 33,
-                group: "group2",
-                unit: "Unit 6: Education",
-                q: "The primary school teacher has just assigned a difficult ________ to the students.",
-                options: ["kindergarten", "qualification", "assignment", "graduate"],
-                ans: 2,
-                hint: "Bài tập lớn hoặc nhiệm vụ được giáo viên giao cho học sinh.",
-                explain: "Assignment (nhiệm vụ học tập/ bài tập lớn) là danh từ chính xác."
-            },
-            {
-                id: 34,
-                group: "group2",
-                unit: "Unit 6: Education",
-                q: "Children usually start ________ at the age of five in many countries.",
-                options: ["kindergarten", "preschool", "qualification", "entrance exam"],
-                ans: 0,
-                hint: "Lớp học mẫu giáo lớn chuyển tiếp lên tiểu học.",
-                explain: "Kindergarten (trường mẫu giáo/ lớp vỡ lòng) dành cho trẻ 5 tuổi trước tiểu học."
-            },
-            {
-                id: 35,
-                group: "group2",
-                unit: "Unit 6: Education",
-                q: "She ________ from high school with excellent grades last year.",
-                options: ["graduates", "graduated", "has graduated", "is graduating"],
-                ans: 1,
-                hint: "Dấu hiệu thời gian quá khứ rõ ràng 'last year'.",
-                explain: "Quá khứ đơn chia động từ có quy tắc: graduate -> graduated."
-            },
-            {
-                id: 36,
-                group: "group2",
-                unit: "Unit 6: Education",
-                q: "He ________ finished his final exam, so he is celebrating now.",
-                options: ["already", "just", "yet", "since"],
-                ans: 1,
-                hint: "Từ đứng giữa 'has/have' và động từ cột 3 chỉ hành động vừa mới xảy ra.",
-                explain: "Has/have + just + PII diễn tả hành động vừa mới tức thời xảy ra."
-            },
-            // UNIT 7: Away from home (37-42)
-            {
-                id: 37,
-                group: "group2",
-                unit: "Unit 7: Away from home",
-                q: "She is completely exhausted because she ________ all night.",
-                options: ["studied", "has been studying", "has studied", "is studying"],
-                ans: 1,
-                hint: "Nhấn mạnh quá trình liên tục kéo dài từ quá khứ và để lại kết quả mệt mỏi ở hiện tại.",
-                explain: "Thì Hiện tại Hoàn thành Tiếp diễn nhấn mạnh tiến trình hành động kéo dài liên tục để lại hệ quả rõ rệt."
-            },
-            {
-                id: 38,
-                group: "group2",
-                unit: "Unit 7: Away from home",
-                q: "Living overseas as an exchange student can make you feel extremely ________.",
-                options: ["international", "homesick", "roommate", "transfer"],
-                ans: 1,
-                hint: "Cảm giác nhớ gia đình, quê hương khi sống xa nhà.",
-                explain: "Homesick (nhớ nhà, nhớ quê hương)."
-            },
-            {
-                id: 39,
-                group: "group2",
-                unit: "Unit 7: Away from home",
-                q: "They ________ each other since they shared an apartment last year.",
-                options: ["have known", "have been knowing", "knew", "know"],
-                ans: 0,
-                hint: "Động từ chỉ trạng thái 'know' không bao giờ chia ở dạng tiếp diễn.",
-                explain: "Dù có 'since' nhưng 'know' là động từ trạng thái nên dùng Hiện tại Hoàn thành thay vì Hoàn thành Tiếp diễn."
-            },
-            {
-                id: 40,
-                group: "group2",
-                unit: "Unit 7: Away from home",
-                q: "We must try our best to ________ in touch with our old friends.",
-                options: ["keep", "lose", "miss", "have"],
-                ans: 0,
-                hint: "Cụm từ mang nghĩa giữ liên lạc.",
-                explain: "Keep in touch (giữ liên lạc). Ngược nghĩa là lose touch."
-            },
-            {
-                id: 41,
-                group: "group2",
-                unit: "Unit 7: Away from home",
-                q: "It's difficult to understand him because of his heavy foreign ________.",
-                options: ["accent", "roommate", "opportunity", "transfer"],
-                ans: 0,
-                hint: "Giọng điệu, cách phát âm đặc trưng theo vùng miền, quốc gia.",
-                explain: "Accent (giọng địa phương, chất giọng)."
-            },
-            {
-                id: 42,
-                group: "group2",
-                unit: "Unit 7: Away from home",
-                q: "He ________ in this overseas study exchange program for six months.",
-                options: ["is participating", "has participated", "has been participating", "participated"],
-                ans: 2,
-                hint: "Có thời gian kéo dài 'for six months' và nhấn mạnh hành trình chưa kết thúc.",
-                explain: "Hiện tại hoàn thành tiếp diễn thể hiện sự tiếp diễn liên tục của hành động từ quá khứ đến nay."
-            },
-            // UNIT 8: Celebrations (43-48)
-            {
-                id: 43,
-                group: "group2",
-                unit: "Unit 8: Celebrations",
-                q: "This traditional annual event ________ by millions of people next December.",
-                options: ["celebrates", "will be celebrated", "is celebrated", "was celebrated"],
-                ans: 1,
-                hint: "Dạng bị động ở tương lai do có từ 'next December' và chủ ngữ là vật.",
-                explain: "Cấu trúc bị động Tương lai đơn: S + will be + PII. Sự kiện được tổ chức."
-            },
-            {
-                id: 44,
-                group: "group2",
-                unit: "Unit 8: Celebrations",
-                q: "Christmas and Thanksgiving are crucial events that ________ many long-standing traditions.",
-                options: ["parade", "symbolize", "gather", "celebrate"],
-                ans: 1,
-                hint: "Động từ mang nghĩa biểu trưng, làm biểu tượng cho điều gì.",
-                explain: "Symbolize (biểu trưng cho, tượng trưng cho)."
-            },
-            {
-                id: 45,
-                group: "group2",
-                unit: "Unit 8: Celebrations",
-                q: "They gathered at the public square to watch the spectacular ________ display.",
-                options: ["parade", "fireworks", "fair", "Christmas"],
-                ans: 1,
-                hint: "Màn trình diễn ánh sáng, pháo hoa nổ trên bầu trời đêm.",
-                explain: "Fireworks display (màn trình diễn pháo hoa) là cụm từ ghép cố định."
-            },
-            {
-                id: 46,
-                group: "group2",
-                unit: "Unit 8: Celebrations",
-                q: "This historic temple ________ in 1486 by a highly famous royal architect.",
-                options: ["built", "was built", "is built", "has been built"],
-                ans: 1,
-                hint: "Bị động ở quá khứ đơn vì có năm xác định trong lịch sử 'in 1486'.",
-                explain: "Bị động Quá khứ đơn: S (số ít) + was + PII."
-            },
-            {
-                id: 47,
-                group: "group2",
-                unit: "Unit 8: Celebrations",
-                q: "The children were excited to join the street ________ during the festival.",
-                options: ["annual", "parade", "fair", "honor"],
-                ans: 1,
-                hint: "Hoạt động diễu hành rực rỡ ngoài đường phố.",
-                explain: "Street parade (cuộc diễu hành đường phố)."
-            },
-            {
-                id: 48,
-                group: "group2",
-                unit: "Unit 8: Celebrations",
-                q: "A grand party was held in ________ of the national heroes.",
-                options: ["honor", "parade", "tradition", "symbolize"],
-                ans: 0,
-                hint: "Cụm danh từ: 'in ... of' nghĩa là nhằm vinh danh ai đó.",
-                explain: "In honor of (để vinh danh/ tỏ lòng tôn kính với ai)."
-            },
-            // UNIT 9: Bad weather (49-54)
-            {
-                id: 49,
-                group: "group2",
-                unit: "Unit 9: Bad weather",
-                q: "The boy ________ we are looking for is a student in our school.",
-                options: ["which", "whose", "whom", "when"],
-                ans: 2,
-                hint: "Đại từ quan hệ thay thế cho danh từ chỉ người đóng vai trò tân ngữ (phía sau là chủ ngữ mới 'we').",
-                explain: "Whom thay thế cho danh từ chỉ người đóng vai trò làm tân ngữ trong mệnh đề quan hệ."
-            },
-            {
-                id: 50,
-                group: "group2",
-                unit: "Unit 9: Bad weather",
-                q: "This is the town ________ the sudden flooding caused severe damage.",
-                options: ["where", "which", "who", "when"],
-                ans: 0,
-                hint: "Từ quan hệ chỉ nơi chốn.",
-                explain: "Where thay thế cho danh từ chỉ nơi chốn (the town)."
-            },
-            {
-                id: 51,
-                group: "group2",
-                unit: "Unit 9: Bad weather",
-                q: "The heavy rains and strong winds caused widespread ________ in low-lying areas.",
-                options: ["bright sunshine", "flooding", "fog", "frosty"],
-                ans: 1,
-                hint: "Hiện tượng nước dâng tràn ngập mặt đất sau mưa lớn.",
-                explain: "Flooding (ngập lụt) là hệ quả trực tiếp của mưa lớn kéo dài."
-            },
-            {
-                id: 52,
-                group: "group2",
-                unit: "Unit 9: Bad weather",
-                q: "The sudden flash of ________ was followed by a loud clap of thunder.",
-                options: ["lightning", "storm", "fog", "rain"],
-                ans: 0,
-                hint: "Tia sét, luồng điện sáng lòa trên bầu trời trước tiếng sấm.",
-                explain: "Lightning (tia chớp/ tia sét). Đi kèm với sấm sét (thunder)."
-            },
-            {
-                id: 53,
-                group: "group2",
-                unit: "Unit 9: Bad weather",
-                q: "I found a lost dog ________ leg was broken in the severe storm.",
-                options: ["who", "which", "whose", "that"],
-                ans: 2,
-                hint: "Từ quan hệ biểu thị quyền sở hữu (cái chân của chú chó).",
-                explain: "Whose đứng trước danh từ thuộc sở hữu của danh từ đứng trước nó."
-            },
-            {
-                id: 54,
-                group: "group2",
-                unit: "Unit 9: Bad weather",
-                q: "They had to cancel the outdoor activity because of the freezing ________.",
-                options: ["winds", "cloudy", "sunshine", "frosty"],
-                ans: 0,
-                hint: "Cần danh từ đứng sau tính từ bổ nghĩa 'freezing'.",
-                explain: "Freezing winds (những luồng gió băng giá)."
-            },
-            // UNIT 10: Arts and Entertainment (55-60)
-            {
-                id: 55,
-                group: "group2",
-                unit: "Unit 10: Arts and Entertainment",
-                q: "The police ________ the important information by an anonymous witness yesterday.",
-                options: ["offered", "were offered", "was offered", "has offered"],
-                ans: 1,
-                hint: "Bị động gián tiếp của động từ có hai tân ngữ. Hãy lưu ý danh từ tập hợp 'The police'.",
-                explain: "The police là danh từ số nhiều, đi kèm bị động quá khứ đơn: were offered."
-            },
-            {
-                id: 56,
-                group: "group2",
-                unit: "Unit 10: Arts and Entertainment",
-                q: "The grand museum owns a magnificent ________ of ancient marble sculptures.",
-                options: ["band", "fan club", "collection", "exhibition"],
-                ans: 2,
-                hint: "Tập hợp các cổ vật quý hiếm được trưng bày cùng nhau.",
-                explain: "Collection (bộ sưu tập)."
-            },
-            {
-                id: 57,
-                group: "group2",
-                unit: "Unit 10: Arts and Entertainment",
-                q: "Their new musical album became an instant global ________ on the charts.",
-                options: ["attendance", "sculpture", "hit", "member"],
-                ans: 2,
-                hint: "Tác phẩm/ bài hát cực kỳ thịnh hành, ăn khách và thành công.",
-                explain: "Hit (bài hát/ album thành công vang dội)."
-            },
-            {
-                id: 58,
-                group: "group2",
-                unit: "Unit 10: Arts and Entertainment",
-                q: "A classic painting by Van Gogh ________ in the national gallery next month.",
-                options: ["exhibits", "will be exhibited", "is exhibited", "was exhibited"],
-                ans: 1,
-                hint: "Bị động ở tương lai với từ nhận biết 'next month'.",
-                explain: "Bị động tương lai đơn: will be + PII."
-            },
-            {
-                id: 59,
-                group: "group2",
-                unit: "Unit 10: Arts and Entertainment",
-                q: "The lead ________ was highly praised for her outstanding vocal performance.",
-                options: ["band", "sculpture", "singer", "exhibition"],
-                ans: 2,
-                hint: "Người hát chính trong một ban nhạc.",
-                explain: "Lead singer (ca sĩ hát chính)."
-            },
-            {
-                id: 60,
-                group: "group2",
-                unit: "Unit 10: Arts and Entertainment",
-                q: "We were ________ to turn off our mobile phones during the theater show.",
-                options: ["asked", "asking", "ask", "to ask"],
-                ans: 0,
-                hint: "Cấu trúc bị động: S + be + V3/ed + to V.",
-                explain: "Be asked to do something (được yêu cầu làm việc gì)."
-            },
-            // UNIT 11: At work (61-66)
-            {
-                id: 61,
-                group: "group3",
-                unit: "Unit 11: At work",
-                q: "She submitted her detailed ________ to the advertising agency yesterday morning.",
-                options: ["promotion", "contract", "resume", "income tax"],
-                ans: 2,
-                hint: "Hồ sơ tóm tắt lý lịch trích ngang, kinh nghiệm làm việc khi đi xin việc.",
-                explain: "Resume (sơ yếu lý lịch, CV xin việc)."
-            },
-            {
-                id: 62,
-                group: "group3",
-                unit: "Unit 11: At work",
-                q: "A: Have you updated the financial planning report yet?\nB: Yes, I ________ it to the director two hours ago.",
-                options: ["have sent", "sent", "send", "was sending"],
-                ans: 1,
-                hint: "Chú ý mốc thời gian quá khứ xác định 'two hours ago' trong câu trả lời.",
-                explain: "Dù câu hỏi ở Hiện tại hoàn thành, câu trả lời có mốc quá khứ xác định bắt buộc dùng Quá khứ đơn."
-            },
-            {
-                id: 63,
-                group: "group3",
-                unit: "Unit 11: At work",
-                q: "The company signed a lucrative ________ with their new international client.",
-                options: ["application", "contract", "promotion", "resume"],
-                ans: 1,
-                hint: "Văn bản thỏa thuận ký kết mang tính pháp lý giữa hai bên.",
-                explain: "Contract (hợp đồng)."
-            },
-            {
-                id: 64,
-                group: "group3",
-                unit: "Unit 11: At work",
-                q: "He applied for a ________ position because he only wanted to work for three months.",
-                options: ["temporary", "permanent", "formal", "promotion"],
-                ans: 0,
-                hint: "Vị trí công việc ngắn hạn, tạm thời.",
-                explain: "Temporary position (vị trí công việc tạm thời)."
-            },
-            {
-                id: 65,
-                group: "group3",
-                unit: "Unit 11: At work",
-                q: "He is hoping for a ________ after successfully completing the big project.",
-                options: ["income tax", "application", "promotion", "resume"],
-                ans: 2,
-                hint: "Sự thăng tiến lên chức vụ cao hơn.",
-                explain: "Promotion (sự thăng tiến, thăng chức)."
-            },
-            {
-                id: 66,
-                group: "group3",
-                unit: "Unit 11: At work",
-                q: "I ________ at this company for five years, and I still love my job here.",
-                options: ["worked", "have worked", "am working", "work"],
-                ans: 1,
-                hint: "Hành động bắt đầu trong quá khứ kéo dài liên tục và còn tiếp tục ở hiện tại.",
-                explain: "Hiện tại hoàn thành diễn tả hành động kéo dài từ quá khứ đến hiện tại có mốc 'for five years'."
-            },
-            // UNIT 12: Sending a package (67-72)
-            {
-                id: 67,
-                group: "group3",
-                unit: "Unit 12: Sending a package",
-                q: "All fragile express packages ________ carefully before being posted.",
-                options: ["must wrap", "must be wrapped", "must wrapped", "must being wrapped"],
-                ans: 1,
-                hint: "Bị động với động từ khuyết thiếu 'must'.",
-                explain: "Công thức: Modal + be + PII. Gói hàng phải được bọc gói cẩn thận."
-            },
-            {
-                id: 68,
-                group: "group3",
-                unit: "Unit 12: Sending a package",
-                q: "Please write the recipient's address clearly on the paper ________.",
-                options: ["postage", "envelope", "parcel", "stamps"],
-                ans: 1,
-                hint: "Bao bì bằng giấy chứa đựng lá thư bên trong.",
-                explain: "Envelope (phong bì thư)."
-            },
-            {
-                id: 69,
-                group: "group3",
-                unit: "Unit 12: Sending a package",
-                q: "We need to go to the post office to buy some ________ for our letters.",
-                options: ["envelope", "parcel", "stamps", "postage"],
-                ans: 2,
-                hint: "Số nhiều chỉ vật thể dán lên góc phong bì làm phí gửi.",
-                explain: "Stamps (những con tem thư)."
-            },
-            {
-                id: 70,
-                group: "group3",
-                unit: "Unit 12: Sending a package",
-                q: "The package was sent by ________ mail, so it arrived very quickly.",
-                options: ["surface", "express", "wrapped", "box"],
-                ans: 1,
-                hint: "Dịch vụ gửi thư bưu phẩm chuyển phát nhanh.",
-                explain: "Express mail (chuyển phát nhanh/ hỏa tốc)."
-            },
-            {
-                id: 71,
-                group: "group3",
-                unit: "Unit 12: Sending a package",
-                q: "This heavy parcel ________ by surface mail to save cost.",
-                options: ["should send", "should be sent", "should being sent", "should sent"],
-                ans: 1,
-                hint: "Khuyên bảo bị động: nên được gửi đi bằng...",
-                explain: "Cấu trúc: should + be + PII (nên được làm gì)."
-            },
-            {
-                id: 72,
-                group: "group3",
-                unit: "Unit 12: Sending a package",
-                q: "The total ________ fee depends on the weight and destination of your parcel.",
-                options: ["postage", "envelope", "stamps", "box"],
-                ans: 0,
-                hint: "Cước phí bưu chính nói chung.",
-                explain: "Postage (cước phí bưu điện)."
-            },
-            // UNIT 13: Emergency (73-78)
-            {
-                id: 73,
-                group: "group3",
-                unit: "Unit 13: Emergency",
-                q: "I know ________ because he told me this morning.",
-                options: ["where is the clinic", "where the clinic is", "is where the clinic",
-                    "where was the clinic"
-                ],
-                ans: 1,
-                hint: "Mệnh đề danh từ làm tân ngữ giữ nguyên trật tự trần thuật (không đảo ngữ).",
-                explain: "Mệnh đề danh từ: S + V + [Từ để hỏi + S + V]. Không dùng đảo ngữ của câu hỏi trực tiếp."
-            },
-            {
-                id: 74,
-                group: "group3",
-                unit: "Unit 13: Emergency",
-                q: "The ambulance rushed to the scene because there was a serious ________ on the highway.",
-                options: ["signal", "accident", "emergency room", "broken leg"],
-                ans: 1,
-                hint: "Sự cố giao thông nghiêm trọng va chạm xe cộ cần xe cứu thương.",
-                explain: "Accident (vụ tai nạn)."
-            },
-            {
-                id: 75,
-                group: "group3",
-                unit: "Unit 13: Emergency",
-                q: "He was driving ________, so the police officer stopped him and gave him a fine.",
-                options: ["over the speed limit", "on the wrong side", "run out of gas", "broken leg"],
-                ans: 0,
-                hint: "Hành vi chạy xe vượt quá giới hạn tốc độ quy định.",
-                explain: "Over the speed limit (quá giới hạn tốc độ cho phép)."
-            },
-            {
-                id: 76,
-                group: "group3",
-                unit: "Unit 13: Emergency",
-                q: "I went to school yesterday because ________.",
-                options: ["I want to study", "I wanted to study", "to study", "studying"],
-                ans: 1,
-                hint: "Mệnh đề trạng ngữ giải thích nguyên nhân phù hợp về thì trong quá khứ.",
-                explain: "Because + mệnh đề (chủ ngữ + động từ). Động từ chia quá khứ đơn 'wanted' tương thích với 'went'."
-            },
-            {
-                id: 77,
-                group: "group3",
-                unit: "Unit 13: Emergency",
-                q: "The doctor rushed to the ________ to treat the injured driver.",
-                options: ["emergency room", "ambulance", "signal", "broken leg"],
-                ans: 0,
-                hint: "Phòng cấp cứu khẩn cấp trong bệnh viện.",
-                explain: "Emergency room (phòng cấp cứu)."
-            },
-            {
-                id: 78,
-                group: "group3",
-                unit: "Unit 13: Emergency",
-                q: "We ________ because we didn't check the fuel gauge before leaving.",
-                options: ["run out of gas", "ran out of gas", "broken leg", "hurt"],
-                ans: 1,
-                hint: "Hết xăng giữa đường, chia ở dạng quá khứ.",
-                explain: "Ran out of gas (đã hết xăng). Thì quá khứ đơn của run là ran."
-            },
-            // UNIT 14: Banking (79-84)
-            {
-                id: 79,
-                group: "group3",
-                unit: "Unit 14: Banking",
-                q: "You ________ pay a maintenance fee if you want to keep this checking account active.",
-                options: ["have to", "may", "ought", "could"],
-                ans: 0,
-                hint: "Nghĩa bắt buộc xuất phát từ quy định tổ chức ngoại cảnh (Ngân hàng).",
-                explain: "Have to V (phải làm gì theo luật lệ/quy định). Ought phải đi với 'to'."
-            },
-            {
-                id: 80,
-                group: "group3",
-                unit: "Unit 14: Banking",
-                q: "I need to go to the local ________ to withdraw some cash.",
-                options: ["compound interest", "ATM", "debit card", "savings account"],
-                ans: 1,
-                hint: "Trạm rút tiền mặt tự động đặt trên đường phố.",
-                explain: "ATM / Cash dispenser (máy rút tiền tự động)."
-            },
-            {
-                id: 81,
-                group: "group3",
-                unit: "Unit 14: Banking",
-                q: "A savings account usually offers a higher ________ than a standard checking account.",
-                options: ["maintenance fee", "overdraft", "compound interest", "loan"],
-                ans: 2,
-                hint: "Lãi suất kép, lãi suất ngân hàng chi trả cộng dồn.",
-                explain: "Compound interest (lãi kép, lãi cộng dồn)."
-            },
-            {
-                id: 82,
-                group: "group3",
-                unit: "Unit 14: Banking",
-                q: "Students ________ obtain a loan from the government to pay for their tuition fees.",
-                options: ["can", "must not", "ought", "should to"],
-                ans: 0,
-                hint: "Diễn tả khả năng, sự cho phép được quyền làm gì.",
-                explain: "Can (có thể/ được phép). 'Ought' và 'should' ở các phương án khác bị thiếu hoặc thừa từ 'to'."
-            },
-            {
-                id: 83,
-                group: "group3",
-                unit: "Unit 14: Banking",
-                q: "To avoid an ________ fee, make sure you do not spend more money than you have in your account.",
-                options: ["overdraft", "deposit", "loan", "ATM"],
-                ans: 0,
-                hint: "Phí chi tiêu thấu chi vượt hạn mức số dư tài khoản.",
-                explain: "Overdraft (thấu chi, chi vượt mức số dư có)."
-            },
-            {
-                id: 84,
-                group: "group3",
-                unit: "Unit 14: Banking",
-                q: "You ________ tell anyone your secret credit card PIN under any circumstances.",
-                options: ["should", "must not", "don't have to", "may"],
-                ans: 1,
-                hint: "Sự cấm đoán tuyệt đối để bảo vệ tài khoản.",
-                explain: "Must not (không được phép) dùng cho lệnh cấm tuyệt đối vì lý do an toàn."
-            },
-            // UNIT 15: Gadgets (85-90)
-            {
-                id: 85,
-                group: "group3",
-                unit: "Unit 15: Gadgets",
-                q: "Look at those dark clouds! It ________ rain heavily very soon.",
-                options: ["will be", "is going to", "will", "shall"],
-                ans: 1,
-                hint: "Dự đoán tương lai dựa trên bằng chứng hiện tại rõ ràng trước mắt.",
-                explain: "Cấu trúc 'be going to' dùng cho dự đoán có cơ sở khoa học hoặc bằng chứng thực tế ngay lúc nói."
-            },
-            {
-                id: 86,
-                group: "group3",
-                unit: "Unit 15: Gadgets",
-                q: "He works as a professional software ________ for a major tech company.",
-                options: ["charger", "gadget", "programmer", "storage"],
-                ans: 2,
-                hint: "Danh từ chỉ người viết mã, lập trình phần mềm máy tính.",
-                explain: "Programmer (lập trình viên)."
-            },
-            {
-                id: 87,
-                group: "group3",
-                unit: "Unit 15: Gadgets",
-                q: "At 10 o'clock tomorrow morning, we ________ an international hackathon event.",
-                options: ["attend", "will be attending", "will attend", "are attending"],
-                ans: 1,
-                hint: "Hành động đang diễn ra tại một mốc thời điểm cực kỳ chính xác trong tương lai.",
-                explain: "Thì Tương lai Tiếp diễn: S + will be + V-ing diễn tả hành động đang xảy ra tại mốc giờ cụ thể ở tương lai."
-            },
-            {
-                id: 88,
-                group: "group3",
-                unit: "Unit 15: Gadgets",
-                q: "Don't forget to pack your phone ________, otherwise your smartphone battery will die.",
-                options: ["gadget", "charger", "storage", "trend"],
-                ans: 1,
-                hint: "Cục sạc cung cấp nguồn điện cho pin điện thoại.",
-                explain: "Charger (sạc pin)."
-            },
-            {
-                id: 89,
-                group: "group3",
-                unit: "Unit 15: Gadgets",
-                q: "This new tablet has massive ________ capacity, allowing you to store thousands of files.",
-                options: ["storage", "charger", "gadget", "programmer"],
-                ans: 0,
-                hint: "Khả năng lưu trữ dữ liệu của thiết bị số.",
-                explain: "Storage capacity (dung lượng lưu trữ)."
-            },
-            {
-                id: 90,
-                group: "group3",
-                unit: "Unit 15: Gadgets",
-                q: "They ________ a new digital camera next month to capture their study abroad trip.",
-                options: ["bought", "are going to buy", "will be buying", "buy"],
-                ans: 1,
-                hint: "Kế hoạch hoặc dự định đã được chuẩn bị từ trước.",
-                explain: "Be going to V diễn tả một dự định, kế hoạch đã lên lịch sẵn."
-            },
-            // GRAMMAR COMPARISONS (91-94)
-            {
-                id: 91,
-                group: "group3",
-                unit: "Ngữ pháp: Comparisons",
-                q: "The older I get, ________ I am.",
-                options: ["the happy", "the happier", "happier", "the most happy"],
-                ans: 1,
-                hint: "Cấu trúc so sánh kép càng... càng...",
-                explain: "Công thức so sánh kép song song: The + comparative (S+V), the + comparative (S+V). Happier là so sánh hơn của happy."
-            },
-            {
-                id: 92,
-                group: "group3",
-                unit: "Ngữ pháp: Comparisons",
-                q: "Harry's digital camera is much ________ than mine.",
-                options: ["expensive", "more expensive", "most expensive", "expensiver"],
-                ans: 1,
-                hint: "So sánh hơn của tính từ dài có 'than' đứng sau.",
-                explain: "Công thức so sánh hơn tính từ dài: more + adj + than. Có thể thêm 'much' phía trước để nhấn mạnh."
-            },
-            {
-                id: 93,
-                group: "group3",
-                unit: "Ngữ pháp: Comparisons",
-                q: "Amy is the ________ student by far in our elementary school class.",
-                options: ["smarter", "smartest", "most smart", "smart"],
-                ans: 1,
-                hint: "Mạo từ 'the' đứng trước tính từ ngắn chỉ hình thức so sánh nhất.",
-                explain: "The + short adj-est. Smart -> smartest."
-            },
-            {
-                id: 94,
-                group: "group3",
-                unit: "Ngữ pháp: Comparisons",
-                q: "This apartment is not ________ as our old one.",
-                options: ["big", "as big", "so big", "both B and C are correct"],
-                ans: 3,
-                hint: "Trong câu phủ định so sánh bằng, ta có thể dùng từ nào để thay thế từ 'as' thứ nhất?",
-                explain: "Trong câu so sánh bằng thể phủ định, ta sử dụng cấu trúc 'not as... as' hoặc 'not so... as' đều đúng."
-            },
-            // TEST SPECIFICATIONS & RUBRICS (95-100)
-            {
-                id: 95,
-                group: "specs",
-                unit: "Đề thi & Rubrics",
-                q: "Theo cấu trúc đề thi Final Test khóa học DHEN08, phần thi Viết (Writing) yêu cầu dung lượng tối thiểu là bao nhiêu từ và thời gian làm bài bao nhiêu?",
-                options: ["100 từ - 15 phút", "120 từ - 20 phút", "150 từ - 30 phút", "200 từ - 45 phút"],
-                ans: 2,
-                hint: "Xem lại bảng thông số phân bổ thời gian (Allocated Time) phần Writing.",
-                explain: "Theo Test Specifications: Kỹ năng Writing diễn ra trong 30 phút với chủ đề tự do (Free writing) yêu cầu tối thiểu 150 từ."
-            },
-            {
-                id: 96,
-                group: "specs",
-                unit: "Đề thi & Rubrics",
-                q: "Công thức tính Điểm Tổng kết Cuối kỳ (Final Score) của môn học Tiếng Anh 2 (DHEN08) là gì?",
-                options: [
-                    "(Listening + Reading + Writing + Speaking) / 4",
-                    "(Listening + Reading x 2 + Writing + Speaking) / 5",
-                    "(Listening x 2 + Reading x 2 + Writing + Speaking) / 6",
-                    "(Listening + Reading + Writing x 2 + Speaking) / 5"
-                ],
-                ans: 1,
-                hint: "Xem bảng tính điểm Scoring Guide, kỹ năng nào có trọng số 40%?",
-                explain: "Điểm Đọc (Reading) chiếm 40% (hệ số 2), các kỹ năng khác chiếm 20% (hệ số 1). Do đó tổng hệ số chia là 5."
-            },
-            {
-                id: 97,
-                group: "specs",
-                unit: "Đề thi & Rubrics",
-                q: "Phần thi Đọc (Reading) của bài thi chính thức bao gồm bao nhiêu câu hỏi và thời gian làm bài là bao nhiêu phút?",
-                options: ["30 câu - 30 phút", "40 câu - 45 phút", "50 câu - 45 phút", "50 câu - 60 phút"],
-                ans: 2,
-                hint: "Xem kỹ dòng thông tin Reading trong bảng Written Test.",
-                explain: "Phần Reading gồm 50 câu hỏi trắc nghiệm (30 câu Part 4 điền khuyết + 20 câu Part 5 đọc hiểu) làm bài trong vòng 45 phút."
-            },
-            {
-                id: 98,
-                group: "specs",
-                unit: "Đề thi & Rubrics",
-                q: "Trong bài thi Nói (Speaking Final Test) Part 1, mỗi thí sinh sẽ được giám khảo hỏi bao nhiêu câu hỏi cá nhân trực tiếp?",
-                options: ["1 câu hỏi", "2 câu hỏi", "3 câu hỏi", "5 câu hỏi"],
-                ans: 2,
-                hint: "Giám khảo hỏi mỗi thí sinh một lượng câu hỏi nhất định từ các chủ đề trên hệ thống ED.",
-                explain: "Theo mô tả: 'The examiner asks each student 3 questions; the topic for student B is different from student A'."
-            },
-            {
-                id: 99,
-                group: "specs",
-                unit: "Đề thi & Rubrics",
-                q: "Lưu ý cực kỳ quan trọng nào sau đây là đúng về cách dùng đại từ quan hệ 'that' theo giáo trình?",
-                options: [
-                    "That có thể đứng ngay sau dấu phẩy trong mọi trường hợp.",
-                    "That không đứng sau giới từ và dấu phẩy.",
-                    "That có thể đứng trực tiếp ngay sau các giới từ như 'in, on, at'.",
-                    "That chỉ thay thế được duy nhất cho danh từ chỉ vật."
-                ],
-                ans: 1,
-                hint: "Xem ghi chú lưu ý dòng cuối cùng của phần mệnh đề quan hệ (Relative Clauses).",
-                explain: "Quy tắc ngữ pháp bắt buộc: đại từ quan hệ 'that' không được đứng ngay sau giới từ hoặc dấu phẩy."
-            },
-            {
-                id: 100,
-                group: "specs",
-                unit: "Đề thi & Rubrics",
-                q: "Thí sinh có bao nhiêu thời gian chuẩn bị (Preparation time) đối với phần thi nói trả lời câu hỏi cá nhân Part 1?",
-                options: ["Không có thời gian chuẩn bị (Trả lời ngay)", "Chuẩn bị trong 1 phút",
-                    "Chuẩn bị trong 2 phút", "Chuẩn bị trong 3 phút"
-                ],
-                ans: 0,
-                hint: "Đọc kỹ phần mô tả Speaking Part 1 trong Test Specifications.",
-                explain: "Thí sinh phải trả lời ngay khi nghe câu hỏi trực tiếp từ giám khảo: 'The student has no time to prepare for this part. Preparation time: No time'."
-            }
-        ];
+<button class="fab" id="fab" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
-        let userAnswers = {}; // Lưu trữ đáp án của người dùng dưới dạng { id: selected_option_index }
-        let currentFilter = 'all';
+<script>
+// ─────────────────────────────────────────────
+//  DATA – 200 questions
+// ─────────────────────────────────────────────
+const QUESTIONS = [
+// ── UNIT 1 – Emotions (Past Continuous, adj) ──
+{id:1,unit:1,topic:"vocab",q:"She looked <em>___</em> when she heard the unexpected news about her job.",o:["bored","excited","patient","lonely"],a:1,ex:"'Excited' = hứng khởi – phù hợp khi nghe tin bất ngờ tích cực."},
+{id:2,unit:1,topic:"grammar",q:"While Tom <em>___</em> his homework, his sister was watching TV.",o:["did","was doing","does","has done"],a:1,ex:"Past Continuous: while + was/were + Ving – diễn tả hành động đang xảy ra song song."},
+{id:3,unit:1,topic:"vocab",q:"After the long flight, the passengers felt extremely <em>___</em>.",o:["nervous","tired","relaxed","smart"],a:1,ex:"'Tired' = mệt – hợp lý sau chuyến bay dài."},
+{id:4,unit:1,topic:"grammar",q:"I <em>___</em> a book when the phone rang.",o:["read","was reading","have read","am reading"],a:1,ex:"'Was reading' – hành động đang xảy ra (quá khứ tiếp diễn) thì bị gián đoạn bởi 'the phone rang'."},
+{id:5,unit:1,topic:"vocab",q:"The children became <em>___</em> waiting two hours for the bus.",o:["calm","bored","surprised","relaxed"],a:1,ex:"'Bored' = chán – hợp lý khi phải chờ đợi lâu."},
+{id:6,unit:1,topic:"grammar",q:"At 9 p.m. last night, we <em>___</em> dinner together.",o:["have","had","were having","will have"],a:2,ex:"Past Continuous: were having – hành động đang diễn ra tại thời điểm cụ thể trong quá khứ."},
+{id:7,unit:1,topic:"vocab",q:"She stayed <em>___</em> even though everyone around her was panicking.",o:["lonely","calm","bored","nervous"],a:1,ex:"'Calm' = bình tĩnh – đối lập với hành động hoảng loạn xung quanh."},
+{id:8,unit:1,topic:"grammar",q:"What <em>___</em> you <em>___</em> when I called you this morning?",o:["do…do","did…do","were…doing","have…done"],a:2,ex:"Câu hỏi Past Continuous: What were you doing? – hỏi về hành động đang diễn ra trong quá khứ."},
+{id:9,unit:1,topic:"vocab",q:"He felt <em>___</em> because all his friends had gone on holiday without him.",o:["relaxed","smart","lonely","patient"],a:2,ex:"'Lonely' = cô đơn – bạn bè đều đi vắng."},
+{id:10,unit:1,topic:"grammar",q:"While she <em>___</em> in the garden, her dog <em>___</em> out of the gate.",o:["works / runs","was working / ran","worked / was running","has worked / runs"],a:1,ex:"QKTD + QKĐ: hành động dài (was working) bị gián đoạn bởi hành động ngắn (ran)."},
 
-        const questionsWrapper = document.getElementById('questionsWrapper');
-        const answeredCountEl = document.getElementById('answeredCount');
-        const accuracyValEl = document.getElementById('accuracyVal');
-        const correctRatioTextEl = document.getElementById('correctRatioText');
-        const progressBar = document.getElementById('progressBar');
-        const searchInput = document.getElementById('searchInput');
+// ── UNIT 2 – Health / Making excuses (Infinitive & Gerund) ──
+{id:11,unit:2,topic:"grammar",q:"The doctor advised him <em>___</em> sweet food.",o:["avoid","to avoid","avoiding","avoids"],a:1,ex:"'Advise + to V': advise sb to do sth."},
+{id:12,unit:2,topic:"vocab",q:"She went to the <em>___</em> because she had a terrible toothache.",o:["dentist","pill","fever","headache"],a:0,ex:"'Dentist' = nha sĩ – người khám răng."},
+{id:13,unit:2,topic:"grammar",q:"He enjoys <em>___</em> to music when he has a headache.",o:["listen","to listen","listening","listened"],a:2,ex:"'Enjoy + Ving': enjoy listening – gerund sau enjoy."},
+{id:14,unit:2,topic:"vocab",q:"The nurse gave the patient a <em>___</em> for the pain.",o:["pill","fever","operate","temperature"],a:0,ex:"'Pill' = viên thuốc – dùng để giảm đau."},
+{id:15,unit:2,topic:"grammar",q:"I need <em>___</em> a dentist about my tooth.",o:["seeing","see","to see","seen"],a:2,ex:"'Need + to V': need to see – need dùng với động từ nguyên thể có to."},
+{id:16,unit:2,topic:"vocab",q:"She had a <em>___</em> of 39°C, so she stayed home from school.",o:["pain","temperature","cold","headache"],a:1,ex:"'Temperature' = nhiệt độ cơ thể – dùng khi nói về sốt."},
+{id:17,unit:2,topic:"grammar",q:"My dentist suggested <em>___</em> my teeth twice a day.",o:["to brush","brush","brushing","brushed"],a:2,ex:"'Suggest + Ving': suggest brushing."},
+{id:18,unit:2,topic:"vocab",q:"The surgeon had to <em>___</em> on the patient immediately.",o:["brush","pain","operate","headache"],a:2,ex:"'Operate' = phẫu thuật – bác sĩ thực hiện ca mổ."},
+{id:19,unit:2,topic:"grammar",q:"She decided <em>___</em> to the doctor despite the high fever.",o:["go","to go","going","gone"],a:1,ex:"'Decide + to V': decide to go."},
+{id:20,unit:2,topic:"vocab",q:"He took a <em>___</em> to help with his headache.",o:["pill","cold","fever","dentist"],a:0,ex:"'Pill' = viên thuốc – uống để giảm đau đầu."},
 
-        // Render Questions
-        function renderQuestions() {
-            questionsWrapper.innerHTML = '';
-            const query = searchInput.value.toLowerCase();
+// ── UNIT 3 – Tickets / Entertainment (Gerund, Infinitive, Frequency) ──
+{id:21,unit:3,topic:"vocab",q:"The <em>___</em> showed us to our seats before the performance began.",o:["usher","musician","orchestra","auditorium"],a:0,ex:"'Usher' = người dẫn chỗ ngồi trong rạp hát."},
+{id:22,unit:3,topic:"grammar",q:"She <em>___</em> attends the theater – maybe once or twice a year.",o:["always","rarely","usually","often"],a:1,ex:"'Rarely' = hiếm khi – phù hợp với 'once or twice a year'."},
+{id:23,unit:3,topic:"vocab",q:"The <em>___</em> fell at the end of the first act, signaling intermission.",o:["curtain","aisle seat","program","audition"],a:0,ex:"'Curtain' = màn sân khấu – kéo xuống giữa các màn."},
+{id:24,unit:3,topic:"grammar",q:"He let his daughter <em>___</em> up late on weekends.",o:["stays","to stay","staying","stay"],a:3,ex:"'Let + V (bare infinitive)': let sb do sth – không có to."},
+{id:25,unit:3,topic:"vocab",q:"She got an <em>___</em> seat so she could get out quickly during the show.",o:["aisle","curtain","orchestra","audition"],a:0,ex:"'Aisle seat' = ghế gần lối đi – dễ ra vào."},
+{id:26,unit:3,topic:"grammar",q:"There <em>___</em> a famous musician performing at the auditorium tonight.",o:["are","have","is","be"],a:2,ex:"'There is' dùng với danh từ số ít: There is a famous musician."},
+{id:27,unit:3,topic:"vocab",q:"She went to an <em>___</em> to become part of the famous orchestra.",o:["usher","audition","program","curtain"],a:1,ex:"'Audition' = buổi thử giọng/thử vai."},
+{id:28,unit:3,topic:"grammar",q:"They prefer <em>___</em> aisle seats rather than sitting in the middle.",o:["book","to book","books","booked"],a:1,ex:"'Prefer + to V': prefer to book."},
+{id:29,unit:3,topic:"vocab",q:"The <em>___</em> played beautifully throughout the three-hour performance.",o:["program","part","orchestra","usher"],a:2,ex:"'Orchestra' = dàn nhạc giao hưởng."},
+{id:30,unit:3,topic:"grammar",q:"It is important <em>___</em> tickets early for popular shows.",o:["buy","buying","to buy","bought"],a:2,ex:"'It is + adj + to V' – cấu trúc chủ ngữ giả 'It'."},
 
-            const filteredData = questionsData.filter(item => {
-                // Lọc theo danh mục
-                let matchFilter = true;
-                if (currentFilter !== 'all') {
-                    matchFilter = item.group === currentFilter;
-                }
-                // Lọc theo từ khóa tìm kiếm
-                const matchQuery = item.q.toLowerCase().includes(query) ||
-                    item.unit.toLowerCase().includes(query) ||
-                    item.options.some(opt => opt.toLowerCase().includes(query));
+// ── UNIT 4 – Saving Energy (Conditionals 0 & 1) ──
+{id:31,unit:4,topic:"vocab",q:"You should <em>___</em> your phone charger when it is not in use.",o:["unplug","save energy","waste","thermostat"],a:0,ex:"'Unplug' = rút phích cắm – tiết kiệm điện."},
+{id:32,unit:4,topic:"grammar",q:"If you <em>___</em> water to 100°C, it boils. (Zero Conditional)",o:["heat","heated","will heat","would heat"],a:0,ex:"Zero Conditional: If + Present Simple, Present Simple – sự thật hiển nhiên."},
+{id:33,unit:4,topic:"vocab",q:"Solar and wind power are examples of <em>___</em>.",o:["fossil fuel","electricity bill","renewable energy","lightbulb"],a:2,ex:"'Renewable energy' = năng lượng tái tạo."},
+{id:34,unit:4,topic:"grammar",q:"If you <em>___</em> the thermostat, you will reduce your electricity bill.",o:["lower","will lower","lowered","have lowered"],a:0,ex:"First Conditional: If + Present Simple, will + V."},
+{id:35,unit:4,topic:"vocab",q:"Burning coal and oil produces <em>___</em> emissions that harm the environment.",o:["thermostat","fossil fuel","lightbulb","appliance"],a:1,ex:"'Fossil fuel' = nhiên liệu hóa thạch – than, dầu mỏ."},
+{id:36,unit:4,topic:"grammar",q:"If ice <em>___</em>, it becomes water. (general truth)",o:["melts","will melt","melted","has melted"],a:0,ex:"Zero Conditional dùng Present Simple ở cả hai mệnh đề."},
+{id:37,unit:4,topic:"vocab",q:"An energy-efficient <em>___</em> uses less electricity than a traditional one.",o:["thermostat","lightbulb","fossil fuel","unplug"],a:1,ex:"'Lightbulb' = bóng đèn – loại tiết kiệm điện dùng ít năng lượng hơn."},
+{id:38,unit:4,topic:"grammar",q:"If she <em>___</em> her electrical appliances off at night, her bill will decrease.",o:["will turn","turns","turned","turn"],a:1,ex:"First Conditional: If + V (present), S + will + V."},
+{id:39,unit:4,topic:"vocab",q:"The high <em>___</em> last month was because I forgot to unplug my appliances.",o:["electricity bill","renewable energy","fossil fuel","energy efficient"],a:0,ex:"'Electricity bill' = hóa đơn tiền điện."},
+{id:40,unit:4,topic:"grammar",q:"If plants <em>___</em> sunlight, they produce food. (Zero Conditional)",o:["didn't get","don't get","won't get","haven't got"],a:1,ex:"Zero Conditional phủ định: If + don't/doesn't, + don't/doesn't."},
 
-                return matchFilter && matchQuery;
-            });
+// ── UNIT 5 – Second Language (Review Tenses) ──
+{id:41,unit:5,topic:"vocab",q:"Someone who speaks two languages fluently is called <em>___</em>.",o:["monolingual","bilingual","multilingual","native speaker"],a:1,ex:"'Bilingual' = người nói được hai ngôn ngữ."},
+{id:42,unit:5,topic:"grammar",q:"She <em>___</em> English for three hours every day at the moment.",o:["studies","is studying","studied","has studied"],a:1,ex:"Present Continuous: is studying – hành động đang diễn ra."},
+{id:43,unit:5,topic:"vocab",q:"Learning a new language helps you understand a different <em>___</em> and way of life.",o:["vocabulary","culture","informal","formal"],a:1,ex:"'Culture' = văn hóa – gắn liền với ngôn ngữ."},
+{id:44,unit:5,topic:"grammar",q:"My sister <em>___</em> French when she was in high school.",o:["learns","is learning","learned","has learned"],a:2,ex:"Past Simple: learned – hành động hoàn thành trong quá khứ."},
+{id:45,unit:5,topic:"vocab",q:"Children who grow up speaking two languages from birth are considered <em>___</em>.",o:["multilingual","native speaker","formal","monolingual"],a:1,ex:"'Native speaker' = người nói tiếng mẹ đẻ – hoặc người lớn lên với một ngôn ngữ từ nhỏ."},
+{id:46,unit:5,topic:"grammar",q:"She <em>___</em> Japanese classes while she was living in Tokyo.",o:["takes","is taking","was taking","has taken"],a:2,ex:"Past Continuous: was taking – hành động đang diễn ra trong khoảng thời gian quá khứ."},
+{id:47,unit:5,topic:"vocab",q:"Email and messages to your boss should be <em>___</em>, not casual.",o:["informal","formal","bilingual","monolingual"],a:1,ex:"'Formal' = trang trọng – phù hợp với văn phong công việc."},
+{id:48,unit:5,topic:"grammar",q:"She always <em>___</em> her vocabulary notebook with her.",o:["carry","carried","carries","is carrying"],a:2,ex:"Present Simple + always: she carries – thói quen."},
+{id:49,unit:5,topic:"vocab",q:"Speaking multiple languages can positively influence your <em>___</em> and confidence.",o:["personality","raise","vocabulary","native"],a:0,ex:"'Personality' = tính cách – học ngôn ngữ mới thay đổi cách nhìn."},
+{id:50,unit:5,topic:"grammar",q:"While they were studying, they <em>___</em> a lot of new vocabulary.",o:["learn","are learning","were learning","have learned"],a:2,ex:"Hai hành động QKTD song song: were studying / were learning."},
 
-            if (filteredData.length === 0) {
-                questionsWrapper.innerHTML = `
-                    <div class="text-center py-12 bg-white rounded-2xl border border-dashed border-slate-300">
-                        <p class="text-slate-500 font-medium">Không tìm thấy câu hỏi nào phù hợp với từ khóa của bạn.</p>
-                        <button onclick="clearSearch()" class="mt-3 text-sm text-blue-600 font-semibold hover:underline">Xóa bộ lọc tìm kiếm</button>
-                    </div>
-                `;
-                return;
-            }
+// ── UNIT 6 – Education (Present Perfect) ──
+{id:51,unit:6,topic:"vocab",q:"She received her university <em>___</em> after four years of study.",o:["degree","grade","assignment","diploma"],a:0,ex:"'Degree' = bằng đại học."},
+{id:52,unit:6,topic:"grammar",q:"I <em>___</em> never <em>___</em> a formal education abroad.",o:["have / received","did / receive","was / receiving","am / receiving"],a:0,ex:"Present Perfect với 'never': have never received."},
+{id:53,unit:6,topic:"vocab",q:"She finished her <em>___</em> and submitted it before the deadline.",o:["assignment","grade","entrance exam","kindergarten"],a:0,ex:"'Assignment' = bài tập được giao."},
+{id:54,unit:6,topic:"grammar",q:"They <em>___</em> just <em>___</em> their entrance exams.",o:["have / finished","did / finish","were / finishing","are / finishing"],a:0,ex:"Present Perfect với 'just': have just finished."},
+{id:55,unit:6,topic:"vocab",q:"Children in Vietnam start <em>___</em> at the age of five or six.",o:["preschool","grade","degree","diploma"],a:0,ex:"'Preschool' = mầm non / tiền tiểu học."},
+{id:56,unit:6,topic:"grammar",q:"She <em>___</em> already <em>___</em> her homework, so she can relax now.",o:["has / done","did / do","was / doing","is / doing"],a:0,ex:"Present Perfect với 'already': has already done."},
+{id:57,unit:6,topic:"vocab",q:"He studied very hard to pass the university <em>___</em>.",o:["entrance exam","diploma","qualification","kindergarten"],a:0,ex:"'Entrance exam' = kỳ thi đầu vào đại học."},
+{id:58,unit:6,topic:"grammar",q:"<em>___</em> you ever <em>___</em> to an international school?",o:["Have / been","Did / go","Were / going","Are / been"],a:0,ex:"Present Perfect với 'ever': Have you ever been?"},
+{id:59,unit:6,topic:"vocab",q:"After graduating, he received a <em>___</em> in business administration.",o:["diploma","grade","homework","assignment"],a:0,ex:"'Diploma' = bằng tốt nghiệp (thường sau khóa học ngắn hạn hoặc trường nghề)."},
+{id:60,unit:6,topic:"grammar",q:"She <em>___</em> not <em>___</em> her assignment yet.",o:["has / finished","did / finish","is / finishing","was / finishing"],a:0,ex:"Present Perfect phủ định với 'yet': has not finished yet."},
 
-            filteredData.forEach((item, index) => {
-                const isAnswered = userAnswers[item.id] !== undefined;
-                const selectedAns = userAnswers[item.id];
-                const isCorrect = selectedAns === item.ans;
+// ── UNIT 7 – Study Abroad (Present Perfect Continuous) ──
+{id:61,unit:7,topic:"vocab",q:"She has been feeling <em>___</em> since she moved to a new country alone.",o:["homesick","bilingual","overseas","accent"],a:0,ex:"'Homesick' = nhớ nhà."},
+{id:62,unit:7,topic:"grammar",q:"He <em>___</em> English for 5 years and is still improving.",o:["has been studying","has studied","is studying","was studying"],a:0,ex:"Present Perfect Continuous nhấn mạnh quá trình: has been studying for 5 years."},
+{id:63,unit:7,topic:"vocab",q:"She is an <em>___</em> from Korea studying at a Vietnamese university.",o:["exchange student","roommate","accent","opportunity"],a:0,ex:"'Exchange student' = sinh viên trao đổi."},
+{id:64,unit:7,topic:"grammar",q:"They <em>___</em> for the exam since last Monday.",o:["have been preparing","have prepared","are preparing","prepared"],a:0,ex:"HTHT Tiếp diễn: have been preparing since – nhấn mạnh hành động liên tục từ mốc thời gian."},
+{id:65,unit:7,topic:"vocab",q:"Living <em>___</em> for a year improved her English significantly.",o:["overseas","transfer","homesick","accent"],a:0,ex:"'Overseas' = ở nước ngoài."},
+{id:66,unit:7,topic:"grammar",q:"How long <em>___</em> she <em>___</em> in the study exchange program?",o:["has / been participating","did / participate","was / participating","is / participating"],a:0,ex:"'How long + HTHT Tiếp diễn': How long has she been participating?"},
+{id:67,unit:7,topic:"vocab",q:"It is a great <em>___</em> to study at a top university abroad.",o:["opportunity","accent","roommate","miss"],a:0,ex:"'Opportunity' = cơ hội."},
+{id:68,unit:7,topic:"grammar",q:"She <em>___</em> her family since she left for her study program six months ago.",o:["has been missing","misses","missed","had missed"],a:0,ex:"HTHT Tiếp diễn: has been missing – trạng thái kéo dài đến hiện tại."},
+{id:69,unit:7,topic:"vocab",q:"They try to <em>___</em> via video calls every week.",o:["keep in touch","miss","transfer","raise"],a:0,ex:"'Keep in touch' = giữ liên lạc."},
+{id:70,unit:7,topic:"grammar",q:"I <em>___</em> here for two years but I still miss my hometown.",o:["have been living","lived","have lived","am living"],a:0,ex:"HTHT Tiếp diễn nhấn mạnh quá trình sống liên tục tới hiện tại."},
 
-                const qCard = document.createElement('div');
-                qCard.className = `p-6 rounded-2xl border transition-all ${
-                    isAnswered 
-                        ? (isCorrect ? 'bg-emerald-50/40 border-emerald-200' : 'bg-red-50/40 border-red-200') 
-                        : 'bg-white border-slate-200 hover:shadow-md'
-                }`;
-                qCard.id = `q-card-${item.id}`;
+// ── UNIT 8 – Celebrations (Passive Voice) ──
+{id:71,unit:8,topic:"vocab",q:"Fireworks <em>___</em> to celebrate the New Year in many countries.",o:["are used","used","using","be used"],a:0,ex:"Passive Voice: are used – fireworks (chủ thể) + are + PII."},
+{id:72,unit:8,topic:"grammar",q:"The parade <em>___</em> every year in honor of the national holiday.",o:["is organized","organizes","was organizing","organize"],a:0,ex:"Passive Present Simple: is organized – tổ chức hàng năm."},
+{id:73,unit:8,topic:"vocab",q:"The festival <em>___</em> the end of the harvest season.",o:["symbolizes","gathers","celebrates","announces"],a:0,ex:"'Symbolizes' = tượng trưng cho."},
+{id:74,unit:8,topic:"grammar",q:"Hundreds of lanterns <em>___</em> to light up the streets during the festival.",o:["were used","use","are using","used"],a:0,ex:"Passive Past Simple: were used."},
+{id:75,unit:8,topic:"vocab",q:"People <em>___</em> from all over the country to celebrate Thanksgiving.",o:["gather","symbolize","celebrate","parade"],a:0,ex:"'Gather' = tập hợp lại."},
+{id:76,unit:8,topic:"grammar",q:"Christmas <em>___</em> by millions of people around the world every year.",o:["is celebrated","celebrates","has celebrated","was celebrated"],a:0,ex:"Passive Present Simple: is celebrated – thói quen/sự thật."},
+{id:77,unit:8,topic:"vocab",q:"The annual fireworks <em>___</em> lit up the sky during the celebration.",o:["display","event","tradition","parade"],a:0,ex:"'Fireworks display' = màn trình diễn pháo hoa."},
+{id:78,unit:8,topic:"grammar",q:"The new school <em>___</em> last month by the local government.",o:["was built","built","has built","is built"],a:0,ex:"Passive Past Simple: was built by the local government."},
+{id:79,unit:8,topic:"vocab",q:"Giving gifts on Christmas is a long-standing <em>___</em> in many cultures.",o:["tradition","annual","parade","fair"],a:0,ex:"'Tradition' = truyền thống."},
+{id:80,unit:8,topic:"grammar",q:"The bridge <em>___</em> by a team of engineers over three years.",o:["was designed","designed","has designed","is designing"],a:0,ex:"Passive Past Simple với 'by': was designed by."},
 
-                let optionsHTML = '';
-                item.options.forEach((opt, optIdx) => {
-                    let optStyle = 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700';
-                    let badge = '';
+// ── UNIT 9 – Bad Weather (Relative Clauses) ──
+{id:81,unit:9,topic:"vocab",q:"There was a severe <em>___</em> that damaged many houses in the village.",o:["storm","fog","lightning","thunder"],a:0,ex:"'Storm' = bão – gây thiệt hại nhà cửa."},
+{id:82,unit:9,topic:"grammar",q:"The man <em>___</em> lives next door is a meteorologist.",o:["which","whose","who","whom"],a:2,ex:"'Who' thay thế cho người làm chủ ngữ."},
+{id:83,unit:9,topic:"vocab",q:"Drivers should slow down when there is heavy <em>___</em>.",o:["fog","thunder","lightning","sunshine"],a:0,ex:"'Fog' = sương mù – nguy hiểm khi lái xe."},
+{id:84,unit:9,topic:"grammar",q:"This is the town <em>___</em> I grew up.",o:["which","who","where","when"],a:2,ex:"'Where' thay thế cho nơi chốn."},
+{id:85,unit:9,topic:"vocab",q:"The <em>___</em> predicted heavy rains and strong winds for the weekend.",o:["weather report","flooding","frosty","bright sunshine"],a:0,ex:"'Weather report' = bản tin thời tiết."},
+{id:86,unit:9,topic:"grammar",q:"The students <em>___</em> scores were the highest received scholarships.",o:["who","which","that","whose"],a:3,ex:"'Whose' thay thế cho 'of them' – chỉ sở hữu."},
+{id:87,unit:9,topic:"vocab",q:"After the heavy rains, there was serious <em>___</em> in the low-lying areas.",o:["flooding","thunder","frosty","cloudy skies"],a:0,ex:"'Flooding' = lũ lụt."},
+{id:88,unit:9,topic:"grammar",q:"The day <em>___</em> we first met was a stormy one.",o:["where","when","who","which"],a:1,ex:"'When' thay thế cho thời gian."},
+{id:89,unit:9,topic:"vocab",q:"The roads were icy because of the <em>___</em> temperatures overnight.",o:["freezing","bright","stormy","cloudy"],a:0,ex:"'Freezing' = đóng băng – nhiệt độ cực lạnh."},
+{id:90,unit:9,topic:"grammar",q:"I dislike weather <em>___</em> is very hot and humid.",o:["who","whom","that","whose"],a:2,ex:"'That' thay thế cho vật (weather) làm chủ ngữ."},
 
-                    if (isAnswered) {
-                        if (optIdx === item.ans) {
-                            optStyle = 'border-emerald-500 bg-emerald-100 text-emerald-900 font-medium';
-                            badge = ' 🟢 (Đáp án đúng)';
-                        } else if (optIdx === selectedAns) {
-                            optStyle = 'border-red-500 bg-red-100 text-red-900';
-                            badge = ' 🔴 (Bạn chọn sai)';
-                        } else {
-                            optStyle = 'border-slate-200 bg-slate-50 text-slate-400 cursor-not-allowed';
-                        }
-                    }
+// ── UNIT 10 – Arts & Entertainment (Passive – indirect objects) ──
+{id:91,unit:10,topic:"vocab",q:"The art museum has a new <em>___</em> of paintings from the 18th century.",o:["collection","band","hit","sculpture"],a:0,ex:"'Collection' = bộ sưu tập."},
+{id:92,unit:10,topic:"grammar",q:"The teacher <em>___</em> us the results of the exam.",o:["was told","told","were told","is told"],a:1,ex:"Active: told – chủ ngữ (teacher) thực hiện hành động."},
+{id:93,unit:10,topic:"vocab",q:"The gallery <em>___</em> a new <em>___</em> of modern sculptures this weekend.",o:["opens / exhibition","writes / band","creates / hit","shows / fan club"],a:0,ex:"'Exhibition' = triển lãm."},
+{id:94,unit:10,topic:"grammar",q:"We <em>___</em> sent the tickets by the organizer.",o:["were","are","was","be"],a:0,ex:"Passive với hai tân ngữ: We were sent the tickets (by sb)."},
+{id:95,unit:10,topic:"vocab",q:"The <em>___</em> of the concert was over 10,000 people.",o:["attendance","sculpture","hit","fan club"],a:0,ex:"'Attendance' = số lượng người tham dự."},
+{id:96,unit:10,topic:"grammar",q:"She <em>___</em> asked to perform at the exhibition opening ceremony.",o:["was","were","has","is being"],a:0,ex:"Passive Past Simple: was asked – yêu cầu ai đó làm gì."},
+{id:97,unit:10,topic:"vocab",q:"The band released their new <em>___</em> single last Friday.",o:["hit","member","work of art","exhibit"],a:0,ex:"'Hit' = bài hát/sản phẩm nổi tiếng."},
+{id:98,unit:10,topic:"grammar",q:"The children <em>___</em> told to be quiet during the exhibition.",o:["were","are","was","be"],a:0,ex:"Passive với 'tell sb to do': were told to be quiet."},
+{id:99,unit:10,topic:"vocab",q:"That painting is considered a great <em>___</em>.",o:["work of art","lead singer","fan club","band"],a:0,ex:"'Work of art' = tác phẩm nghệ thuật."},
+{id:100,unit:10,topic:"grammar",q:"She <em>___</em> made to sing the national anthem at the ceremony.",o:["was","were","has","had been"],a:0,ex:"Passive với 'make sb do': was made to do (bị động dùng 'to')."},
 
-                    optionsHTML += `
-                        <button 
-                            onclick="selectOption(${item.id}, ${optIdx})" 
-                            ${isAnswered ? 'disabled' : ''}
-                            class="w-full text-left p-3 rounded-xl border transition-all text-sm flex justify-between items-center ${optStyle}"
-                        >
-                            <span>${String.fromCharCode(65 + optIdx)}. ${opt}</span>
-                            <span class="text-xs font-semibold">${badge}</span>
-                        </button>
-                    `;
-                });
+// ── UNIT 11 – At Work (Present Perfect vs other tenses) ──
+{id:101,unit:11,topic:"vocab",q:"She submitted her <em>___</em> for the marketing position last week.",o:["resume","promotion","raise","contract"],a:0,ex:"'Resume' = CV/hồ sơ xin việc."},
+{id:102,unit:11,topic:"grammar",q:"I <em>___</em> this company for five years. I started in 2020.",o:["have worked","work","worked","am working"],a:0,ex:"Present Perfect: have worked for – từ 2020 đến nay vẫn làm."},
+{id:103,unit:11,topic:"vocab",q:"After three years, she finally got a <em>___</em> to senior manager.",o:["promotion","resume","field","contract"],a:0,ex:"'Promotion' = thăng chức."},
+{id:104,unit:11,topic:"grammar",q:"He <em>___</em> this job last year and is still working here.",o:["started","has started","starts","is starting"],a:0,ex:"Past Simple: started last year – thời gian xác định trong quá khứ."},
+{id:105,unit:11,topic:"vocab",q:"Working in an <em>___</em> requires creativity and strong communication skills.",o:["advertising agency","income tax","planning meeting","temporary position"],a:0,ex:"'Advertising agency' = công ty quảng cáo."},
+{id:106,unit:11,topic:"grammar",q:"<em>___</em> you ever attended a planning meeting before joining this company?",o:["Have","Did","Were","Do"],a:0,ex:"Present Perfect với 'ever': Have you ever attended? – hỏi kinh nghiệm."},
+{id:107,unit:11,topic:"vocab",q:"The company offered her a <em>___</em> position until a permanent role opens.",o:["temporary position","income tax","raise","experience"],a:0,ex:"'Temporary position' = vị trí tạm thời."},
+{id:108,unit:11,topic:"grammar",q:"She <em>___</em> three promotions since she joined the company.",o:["has received","received","was receiving","is receiving"],a:0,ex:"Present Perfect: has received – từ khi gia nhập đến nay."},
+{id:109,unit:11,topic:"vocab",q:"He negotiated a <em>___</em> after his excellent performance review.",o:["raise","client","contract","field"],a:0,ex:"'Raise' = tăng lương."},
+{id:110,unit:11,topic:"grammar",q:"She <em>___</em> in the IT field for over a decade.",o:["has been working","worked","works","was working"],a:0,ex:"Present Perfect (hoặc HTHT Tiếp diễn) nhấn mạnh thời gian kéo dài."},
 
-                qCard.innerHTML = `
-                    <div class="flex justify-between items-start gap-4 mb-3">
-                        <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2.5 py-1 rounded">
-                            Câu ${item.id} - ${item.unit}
-                        </span>
-                        <button onclick="toggleHint(${item.id})" class="text-xs text-blue-600 hover:underline font-medium">💡 Gợi ý</button>
-                    </div>
-                    
-                    <h3 class="text-base font-semibold text-slate-800 mb-4">${item.q}</h3>
-                    
-                    <div id="hint-${item.id}" class="hidden mb-4 p-3 bg-amber-50 text-amber-800 rounded-xl border border-amber-100 text-xs">
-                        <strong>Gợi ý:</strong> ${item.hint}
-                    </div>
+// ── UNIT 12 – Postal Services (Modal Verbs + Passive) ──
+{id:111,unit:12,topic:"vocab",q:"She sent the documents by <em>___</em> mail to make sure they arrived the next day.",o:["express","airmail","surface","postage"],a:0,ex:"'Express' = chuyển phát nhanh."},
+{id:112,unit:12,topic:"grammar",q:"This package <em>___</em> be wrapped carefully before mailing.",o:["should","have","is","are"],a:0,ex:"Modal + be + PII: should be wrapped – bị động với modal."},
+{id:113,unit:12,topic:"vocab",q:"The <em>___</em> on the letter was too low, so it was returned.",o:["postage","stamps","envelope","parcel"],a:0,ex:"'Postage' = bưu phí."},
+{id:114,unit:12,topic:"grammar",q:"The parcel <em>___</em> be delivered by tomorrow.",o:["must","should","can","will"],a:0,ex:"'Must' = bắt buộc – dùng khi cần nhấn mạnh yêu cầu."},
+{id:115,unit:12,topic:"vocab",q:"She put the letter in an <em>___</em> and sealed it.",o:["envelope","stamps","airmail","box"],a:0,ex:"'Envelope' = phong bì."},
+{id:116,unit:12,topic:"grammar",q:"The forms <em>___</em> be completed in ink.",o:["must","are","were","is"],a:0,ex:"Modal passive: must be completed."},
+{id:117,unit:12,topic:"vocab",q:"She collected a book of <em>___</em> from the post office.",o:["stamps","postage","surface mail","parcel"],a:0,ex:"'Stamps' = tem thư."},
+{id:118,unit:12,topic:"grammar",q:"The package <em>___</em> not be opened without permission.",o:["should","is","has","have"],a:0,ex:"Negative modal: should not be opened."},
+{id:119,unit:12,topic:"vocab",q:"Sending goods by <em>___</em> is cheaper but takes longer.",o:["surface mail","express","airmail","special delivery"],a:0,ex:"'Surface mail' = đường bộ/đường biển – chậm hơn nhưng rẻ hơn."},
+{id:120,unit:12,topic:"grammar",q:"This letter <em>___</em> be translated before it can be sent.",o:["may","must","have","are"],a:0,ex:"'May' hoặc 'must' đều dùng được; 'must be translated' mạnh hơn (bắt buộc)."},
 
-                    <div class="space-y-2 mb-4">
-                        ${optionsHTML}
-                    </div>
+// ── UNIT 13 – Emergency / Road Accidents (Noun & Adverbial Clauses) ──
+{id:121,unit:13,topic:"vocab",q:"The driver was injured in the accident and was taken to the <em>___</em>.",o:["emergency room","ambulance","signal","broken leg"],a:0,ex:"'Emergency room' = phòng cấp cứu."},
+{id:122,unit:13,topic:"grammar",q:"I know <em>___</em> the accident happened.",o:["where","which","who","that"],a:0,ex:"Noun clause: know where (mệnh đề danh từ cung cấp thông tin)."},
+{id:123,unit:13,topic:"vocab",q:"The driver was driving on the <em>___</em>, which caused the head-on collision.",o:["wrong side of the road","over the speed limit","run out of gas","signal"],a:0,ex:"'Wrong side of the road' = sai làn đường."},
+{id:124,unit:13,topic:"grammar",q:"She called 113 <em>___</em> she saw the accident.",o:["because","although","where","who"],a:0,ex:"Adverbial clause of reason: because – giải thích lý do."},
+{id:125,unit:13,topic:"vocab",q:"The car <em>___</em> and stopped in the middle of the highway.",o:["ran out of gas","rushed","signaled","hurt"],a:0,ex:"'Ran out of gas' = hết xăng."},
+{id:126,unit:13,topic:"grammar",q:"Tell me <em>___</em> you were doing at the time of the accident.",o:["what","when","where","who"],a:0,ex:"Noun clause: tell me what (mệnh đề danh từ sau tell)."},
+{id:127,unit:13,topic:"vocab",q:"Speeding is <em>___</em> and can result in heavy fines.",o:["dangerous","serious","hurt","signal"],a:0,ex:"'Dangerous' = nguy hiểm."},
+{id:128,unit:13,topic:"grammar",q:"He failed his driving test <em>___</em> he didn't check his mirrors enough.",o:["because","although","when","which"],a:0,ex:"Adverbial clause of reason: because + clause."},
+{id:129,unit:13,topic:"vocab",q:"The <em>___</em> arrived quickly and took the injured driver to hospital.",o:["ambulance","signal","rush","accident"],a:0,ex:"'Ambulance' = xe cấp cứu."},
+{id:130,unit:13,topic:"grammar",q:"I don't know <em>___</em> the driver was speeding.",o:["whether","which","who","what"],a:0,ex:"Noun clause với 'whether': I don't know whether... – câu hỏi gián tiếp yes/no."},
 
-                    ${isAnswered ? `
-                        <div class="p-3.5 bg-slate-100/80 rounded-xl text-xs text-slate-600 mt-2 border border-slate-200/50">
-                            <strong>Giải thích:</strong> ${item.explain}
-                        </div>
-                    ` : ''}
-                `;
-                questionsWrapper.appendChild(qCard);
-            });
-        }
+// ── UNIT 14 – Banking (Modal Verbs – obligation, permission, advice) ──
+{id:131,unit:14,topic:"vocab",q:"She went to the ATM to <em>___</em> some cash for the weekend.",o:["withdraw money","borrow","deposit","loan"],a:0,ex:"'Withdraw money' = rút tiền."},
+{id:132,unit:14,topic:"grammar",q:"You <em>___</em> keep your PIN number secret at all times.",o:["must","may","would","could"],a:0,ex:"'Must' = bắt buộc – giữ bí mật PIN là bắt buộc."},
+{id:133,unit:14,topic:"vocab",q:"He opened a <em>___</em> to save money for his education.",o:["savings account","debit card","overdraft","compound interest"],a:0,ex:"'Savings account' = tài khoản tiết kiệm."},
+{id:134,unit:14,topic:"grammar",q:"You <em>___</em> take out a loan if you can't afford the fees.",o:["could","must","shall","need"],a:0,ex:"'Could' = gợi ý/khả năng – bạn có thể vay tiền."},
+{id:135,unit:14,topic:"vocab",q:"He had to pay a <em>___</em> because he didn't maintain the minimum balance.",o:["maintenance fee","cash","loan","deposit"],a:0,ex:"'Maintenance fee' = phí duy trì tài khoản."},
+{id:136,unit:14,topic:"grammar",q:"You <em>___</em> check your bank balance regularly to avoid an overdraft.",o:["should","must to","can to","have"],a:0,ex:"'Should' = lời khuyên – nên kiểm tra số dư định kỳ."},
+{id:137,unit:14,topic:"vocab",q:"A <em>___</em> earns interest on the interest you have already earned.",o:["compound interest","debit card","checking account","borrow"],a:0,ex:"'Compound interest' = lãi kép – lãi được tính trên cả vốn và lãi cũ."},
+{id:138,unit:14,topic:"grammar",q:"Students <em>___</em> borrow textbooks from the library without paying.",o:["can","must","ought","have to"],a:0,ex:"'Can' = cho phép – được phép mượn."},
+{id:139,unit:14,topic:"vocab",q:"Her account went into <em>___</em> after she spent more than she had.",o:["overdraft","cash dispenser","deposit","loan"],a:0,ex:"'Overdraft' = thâm hụt tài khoản."},
+{id:140,unit:14,topic:"grammar",q:"You <em>___</em> to pay your credit card bill by the due date.",o:["ought","may","can","will"],a:0,ex:"'Ought to' = nên (lời khuyên): ought to pay."},
 
-        // Action when selecting an option
-        window.selectOption = function (qId, optIdx) {
-            if (userAnswers[qId] !== undefined) return;
-            userAnswers[qId] = optIdx;
+// ── UNIT 15 – Gadgets (Future Tenses) ──
+{id:141,unit:15,topic:"vocab",q:"Don't forget to bring your <em>___</em> – your phone is almost dead.",o:["charger","gadget","app","storage"],a:0,ex:"'Charger' = cục sạc điện thoại."},
+{id:142,unit:15,topic:"grammar",q:"Look at those clouds – it <em>___</em> to rain soon.",o:["is going","will","goes","would"],a:0,ex:"'Be going to' + bằng chứng hiện tại: is going to rain."},
+{id:143,unit:15,topic:"vocab",q:"She downloaded a useful <em>___</em> to help manage her study schedule.",o:["app","trend","hackathon","programmer"],a:0,ex:"'App' = ứng dụng điện thoại."},
+{id:144,unit:15,topic:"grammar",q:"This time next year, she <em>___</em> working as a software programmer.",o:["will be","is going to","is","will"],a:0,ex:"Future Continuous: will be working – hành động đang diễn ra vào thời điểm tương lai."},
+{id:145,unit:15,topic:"vocab",q:"The new <em>___</em> has more storage and a better camera than the old model.",o:["smartphone","charger","tablet","laptop"],a:0,ex:"'Smartphone' = điện thoại thông minh."},
+{id:146,unit:15,topic:"grammar",q:"I think electric cars <em>___</em> replace petrol cars in the future.",o:["will","are going to","would","are"],a:0,ex:"'Will' = dự đoán không có bằng chứng cụ thể."},
+{id:147,unit:15,topic:"vocab",q:"She participates in a <em>___</em> every year to improve her coding skills.",o:["hackathon","gadget","trend","digital device"],a:0,ex:"'Hackathon' = cuộc thi lập trình marathon."},
+{id:148,unit:15,topic:"grammar",q:"They <em>___</em> launch the new app next Monday.",o:["are going to","will be","were","is"],a:0,ex:"'Be going to' – kế hoạch đã được quyết định trước: are going to launch."},
+{id:149,unit:15,topic:"vocab",q:"The <em>___</em> of using artificial intelligence in everyday life is growing rapidly.",o:["trend","storage","digital camera","tablet"],a:0,ex:"'Trend' = xu hướng."},
+{id:150,unit:15,topic:"grammar",q:"This time tomorrow, the programmers <em>___</em> presenting their new gadget.",o:["will be","are going to","would","will"],a:0,ex:"Future Continuous: will be presenting – hành động đang xảy ra vào thời điểm cụ thể trong tương lai."},
 
-            // Lưu vào LocalStorage
-            localStorage.setItem('dhen08_quiz_answers', JSON.stringify(userAnswers));
+// ── MIXED GRAMMAR REVIEW 151–180 ──
+{id:151,unit:0,topic:"grammar",q:"She is <em>___</em> student in the class. No one studies harder than her.",o:["the hardest-working","harder-working","as hard-working as","more hard-working"],a:0,ex:"Superlative: the hardest-working – so sánh nhất."},
+{id:152,unit:0,topic:"grammar",q:"The exam was <em>___</em> than we expected.",o:["more difficult","most difficult","as difficult","difficult than"],a:0,ex:"Comparative: more difficult than."},
+{id:153,unit:0,topic:"grammar",q:"<em>___</em> harder you study, <em>___</em> better your results will be.",o:["The / the","A / a","More / more","As / as"],a:0,ex:"Double comparative: The + comparative, the + comparative."},
+{id:154,unit:0,topic:"grammar",q:"Her new laptop is not <em>___</em> fast <em>___</em> her old desktop.",o:["as / as","so / than","more / as","as / than"],a:0,ex:"Negative equality: not as…as = không bằng."},
+{id:155,unit:0,topic:"grammar",q:"The package <em>___</em> be sent today without fail.",o:["must","may","can","could"],a:0,ex:"'Must' = bắt buộc – không thể bỏ qua."},
+{id:156,unit:0,topic:"grammar",q:"She <em>___</em> have her phone repaired – the screen is cracked.",o:["needs to","need","needs","is needed"],a:0,ex:"'Need to + V' = cần phải."},
+{id:157,unit:0,topic:"grammar",q:"This is the book <em>___</em> changed my life.",o:["that","who","whom","whose"],a:0,ex:"'That' thay thế cho vật (book) làm chủ ngữ."},
+{id:158,unit:0,topic:"grammar",q:"The engineer <em>___</em> designed this bridge won an award.",o:["who","which","that","whose"],a:0,ex:"'Who' thay thế cho người làm chủ ngữ."},
+{id:159,unit:0,topic:"grammar",q:"She doesn't know <em>___</em> she should apply for the job.",o:["whether","which","that","what"],a:0,ex:"Noun clause với yes/no question gián tiếp: whether she should."},
+{id:160,unit:0,topic:"grammar",q:"We were told <em>___</em> the meeting was postponed.",o:["that","what","which","where"],a:0,ex:"Noun clause sau 'told': told that…"},
+{id:161,unit:0,topic:"grammar",q:"<em>___</em> she passed the exam was a surprise to everyone.",o:["That","What","Which","Whether"],a:0,ex:"'That' mở đầu noun clause làm chủ ngữ."},
+{id:162,unit:0,topic:"grammar",q:"I have been waiting <em>___</em> two hours.",o:["for","since","in","from"],a:0,ex:"'For + period of time': for two hours."},
+{id:163,unit:0,topic:"grammar",q:"She has lived here <em>___</em> 2018.",o:["since","for","from","in"],a:0,ex:"'Since + point in time': since 2018."},
+{id:164,unit:0,topic:"grammar",q:"He <em>___</em> finish the report by tomorrow or he will lose his job.",o:["must","may","could","might"],a:0,ex:"'Must' = bắt buộc phải làm."},
+{id:165,unit:0,topic:"grammar",q:"You <em>___</em> eat in the library. It is not allowed.",o:["shouldn't","can","may","should"],a:0,ex:"'Shouldn't' = không nên (cấm đoán lịch sự)."},
+{id:166,unit:0,topic:"grammar",q:"The emails <em>___</em> be answered within 24 hours.",o:["should","are","have","is"],a:0,ex:"Modal passive: should be answered."},
+{id:167,unit:0,topic:"grammar",q:"The project <em>___</em> be completed by the team next week.",o:["will","is","have","was"],a:0,ex:"Future passive: will be completed."},
+{id:168,unit:0,topic:"grammar",q:"She told me <em>___</em> the deadline was.",o:["what","which","who","that"],a:0,ex:"Noun clause: told me what – hỏi thông tin."},
+{id:169,unit:0,topic:"grammar",q:"The reason <em>___</em> she was absent is still unknown.",o:["why","which","who","when"],a:0,ex:"'Why' thay thế cho lý do trong relative clause."},
+{id:170,unit:0,topic:"grammar",q:"He drives <em>___</em> carefully <em>___</em> his sister does.",o:["as / as","more / than","most / of","so / as"],a:0,ex:"Equality: as…as – lái xe cẩn thận bằng chị gái."},
+{id:171,unit:0,topic:"grammar",q:"My phone is <em>___</em> than yours. Mine has 256GB.",o:["faster","more storage","bigger storage","much more storage"],a:3,ex:"Comparative: much more storage – so sánh hơn nhấn mạnh."},
+{id:172,unit:0,topic:"grammar",q:"They asked her <em>___</em> she could join the online meeting.",o:["if","that","what","when"],a:0,ex:"Noun clause sau 'asked': asked if – câu hỏi gián tiếp."},
+{id:173,unit:0,topic:"grammar",q:"The museum <em>___</em> the most popular tourist site in the city.",o:["is considered","considers","consider","was considering"],a:0,ex:"Passive Present Simple: is considered."},
+{id:174,unit:0,topic:"grammar",q:"He avoided <em>___</em> to his boss about the mistake.",o:["talking","to talk","talk","talked"],a:0,ex:"'Avoid + Ving': avoid talking."},
+{id:175,unit:0,topic:"grammar",q:"She managed <em>___</em> the assignment on time.",o:["to complete","completing","complete","completed"],a:0,ex:"'Manage + to V': manage to complete."},
+{id:176,unit:0,topic:"grammar",q:"The manager made the staff <em>___</em> overtime on weekends.",o:["work","to work","working","worked"],a:0,ex:"'Make sb do' (bare infinitive) – active. Passive: was made to work."},
+{id:177,unit:0,topic:"grammar",q:"This is the city <em>___</em> the international gadget expo was held.",o:["where","when","which","who"],a:0,ex:"'Where' thay thế cho địa điểm."},
+{id:178,unit:0,topic:"grammar",q:"She has been studying <em>___</em> she woke up this morning.",o:["since","for","from","in"],a:0,ex:"'Since + point in time': since she woke up."},
+{id:179,unit:0,topic:"grammar",q:"<em>___</em> the weather is bad, the outdoor event will be cancelled.",o:["If","Because","Although","When"],a:0,ex:"First Conditional: If…will – điều kiện có thể xảy ra."},
+{id:180,unit:0,topic:"grammar",q:"The homework <em>___</em> by all students before class.",o:["must be done","must do","must doing","must be doing"],a:0,ex:"Modal passive: must be done."},
 
-            updateStats();
-            renderQuestions();
+// ── MIXED VOCABULARY REVIEW 181–200 ──
+{id:181,unit:0,topic:"vocab",q:"She felt <em>___</em> after missing her flight and losing her luggage.",o:["stressed","relaxed","calm","excited"],a:0,ex:"'Stressed' = căng thẳng – hợp lý khi gặp nhiều vấn đề liên tiếp."},
+{id:182,unit:0,topic:"vocab",q:"The new policy <em>___</em> employees to work from home three days a week.",o:["allows","symbolizes","gathers","organizes"],a:0,ex:"'Allows' = cho phép."},
+{id:183,unit:0,topic:"vocab",q:"She is fluent in three languages and works as a <em>___</em> at the United Nations.",o:["interpreter","programmer","usher","lead singer"],a:0,ex:"'Interpreter' = phiên dịch viên – công việc sử dụng đa ngôn ngữ."},
+{id:184,unit:0,topic:"vocab",q:"The <em>___</em> camera took stunning shots of the lightning storm.",o:["digital","renewable","formal","annual"],a:0,ex:"'Digital camera' = máy ảnh kỹ thuật số."},
+{id:185,unit:0,topic:"vocab",q:"She received a scholarship to study <em>___</em> at a top university in Japan.",o:["overseas","homesick","bilingual","formal"],a:0,ex:"'Overseas' = ở nước ngoài."},
+{id:186,unit:0,topic:"vocab",q:"The bank offered him a low-interest <em>___</em> to buy a new house.",o:["loan","withdraw","overdraft","stamp"],a:0,ex:"'Loan' = khoản vay."},
+{id:187,unit:0,topic:"vocab",q:"She bought a <em>___</em> at the post office to send her parcel abroad.",o:["stamp","envelope","checkbook","airmail"],a:0,ex:"'Stamp' = tem thư – dán lên bì thư."},
+{id:188,unit:0,topic:"vocab",q:"The city was decorated with lights and <em>___</em> for the New Year celebration.",o:["fireworks","sculptures","collections","programs"],a:0,ex:"'Fireworks' = pháo hoa."},
+{id:189,unit:0,topic:"vocab",q:"She was nervous before her <em>___</em> for the lead role in the musical.",o:["audition","usher","curtain","part"],a:0,ex:"'Audition' = buổi thử tài."},
+{id:190,unit:0,topic:"vocab",q:"The emergency <em>___</em> rushed to the scene of the road accident.",o:["ambulance","package","gadget","band"],a:0,ex:"'Ambulance' = xe cấp cứu."},
+{id:191,unit:0,topic:"vocab",q:"She signed a one-year <em>___</em> with the advertising agency.",o:["contract","raise","income","assignment"],a:0,ex:"'Contract' = hợp đồng."},
+{id:192,unit:0,topic:"vocab",q:"The <em>___</em> was late because of heavy traffic and bad weather.",o:["special delivery","surface mail","stamps","airmail"],a:0,ex:"'Special delivery' = chuyển phát đặc biệt."},
+{id:193,unit:0,topic:"vocab",q:"She stored all her photos on a cloud <em>___</em> service.",o:["storage","charger","trend","app"],a:0,ex:"'Storage' = lưu trữ dữ liệu."},
+{id:194,unit:0,topic:"vocab",q:"Learning about different cultures helps you become more <em>___</em>.",o:["open-minded","monolingual","formal","bored"],a:0,ex:"'Open-minded' = cởi mở – kết quả của việc học về văn hóa mới."},
+{id:195,unit:0,topic:"vocab",q:"The weather <em>___</em> warned residents about the approaching typhoon.",o:["report","flood","lightning","thunder"],a:0,ex:"'Weather report' = bản tin dự báo thời tiết."},
+{id:196,unit:0,topic:"vocab",q:"She applied for a student exchange program to improve her <em>___</em> and cultural skills.",o:["vocabulary","symptom","degree","promotion"],a:0,ex:"'Vocabulary' = vốn từ vựng."},
+{id:197,unit:0,topic:"vocab",q:"He forgot to pay his <em>___</em> on time and was charged a late fee.",o:["electricity bill","savings account","loan","postage"],a:0,ex:"'Electricity bill' = hóa đơn tiền điện."},
+{id:198,unit:0,topic:"vocab",q:"The art gallery opened a new <em>___</em> featuring works by local artists.",o:["exhibition","attendance","hit","fan club"],a:0,ex:"'Exhibition' = triển lãm."},
+{id:199,unit:0,topic:"vocab",q:"She got a <em>___</em> degree after completing her four-year university program.",o:["bachelor's","diploma","certificate","grade"],a:0,ex:"'Bachelor's degree' = bằng cử nhân – sau 4 năm đại học."},
+{id:200,unit:0,topic:"vocab",q:"The new smartphone <em>___</em> shows a rise in demand for mobile devices.",o:["trend","charger","gadget","app"],a:0,ex:"'Trend' = xu hướng – cho thấy sự gia tăng nhu cầu."},
+];
 
-            // Tự động cuộn mượt đến câu tiếp theo sau 800ms
-            setTimeout(() => {
-                const nextId = qId + 1;
-                const nextCard = document.getElementById(`q-card-${nextId}`);
-                if (nextCard && currentFilter === 'all') {
-                    nextCard.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'center'
-                    });
-                }
-            }, 800);
-        }
+// ─────────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────────
+let answered = {}; // id -> {selected, correct}
+let currentFilter = 'all';
 
-        // Toggle Hint visibility
-        window.toggleHint = function (id) {
-            const hintBox = document.getElementById(`hint-${id}`);
-            if (hintBox) {
-                hintBox.classList.toggle('hidden');
-            }
-        }
+function unitOf(q){ return q.unit; }
 
-        // Clear Search Box
-        window.clearSearch = function () {
-            searchInput.value = '';
-            renderQuestions();
-        }
+function matchesFilter(q, f){
+  if(f === 'all') return true;
+  if(f === 'grammar') return q.topic === 'grammar';
+  if(f === 'vocab') return q.topic === 'vocab';
+  const [a,b] = f.split('-').map(Number);
+  return q.unit >= a && q.unit <= b;
+}
 
-        // Update Dashboard Stats
-        function updateStats() {
-            const answeredKeys = Object.keys(userAnswers);
-            const totalAnswered = answeredKeys.length;
-            answeredCountEl.innerText = totalAnswered;
+// ─────────────────────────────────────────────
+//  RENDER
+// ─────────────────────────────────────────────
+function renderAll(){
+  const list = document.getElementById('questions-list');
+  list.innerHTML = '';
+  QUESTIONS.forEach(q => {
+    const div = document.createElement('div');
+    div.className = 'qcard' + (matchesFilter(q, currentFilter) ? '' : ' hidden');
+    div.id = 'qcard-' + q.id;
 
-            const progressPercent = (totalAnswered / 100) * 100;
-            progressBar.style.width = `${progressPercent}%`;
+    const unitLabel = q.unit === 0 ? 'Ôn tổng hợp' : 'Unit ' + q.unit;
+    const topicLabel = q.topic === 'grammar' ? '📚 Ngữ pháp' : '📖 Từ vựng';
 
-            if (totalAnswered > 0) {
-                let correctCount = 0;
-                answeredKeys.forEach(qId => {
-                    const qObj = questionsData.find(item => item.id == qId);
-                    if (qObj && userAnswers[qId] === qObj.ans) {
-                        correctCount++;
-                    }
-                });
+    const ans = answered[q.id];
+    if(ans){
+      div.classList.add(ans.correct ? 'answered-correct' : 'answered-wrong');
+    }
 
-                const accuracyVal = Math.round((correctCount / totalAnswered) * 100);
-                accuracyValEl.innerText = `${accuracyVal}%`;
-                correctRatioTextEl.innerText = `Đúng ${correctCount} trên tổng số ${totalAnswered} câu đã làm`;
+    div.innerHTML = `
+      <div class="q-meta">
+        <span class="q-num">Câu ${q.id}</span>
+        <span class="q-unit">${unitLabel}</span>
+        <span class="q-topic">${topicLabel}</span>
+      </div>
+      <div class="q-text">${q.q}</div>
+      <div class="options" id="opts-${q.id}">
+        ${q.o.map((opt,i) => {
+          let cls = 'option';
+          if(ans){
+            cls += ' disabled';
+            if(i === q.a) cls += ' correct';
+            else if(i === ans.selected) cls += ' wrong';
+          }
+          return `<button class="${cls}" onclick="answer(${q.id},${i})">${String.fromCharCode(65+i)}. ${opt}</button>`;
+        }).join('')}
+      </div>
+      <div class="q-feedback ${ans ? (ans.correct ? 'correct-fb' : 'wrong-fb') + ' show' : ''}" id="fb-${q.id}">
+        ${ans ? (ans.correct ? '✅ Chính xác! ' : '❌ Sai rồi! ') + q.ex : q.ex}
+      </div>
+    `;
+    list.appendChild(div);
+  });
+  updateStats();
+}
 
-                if (accuracyVal >= 80) {
-                    accuracyValEl.className = "text-3xl font-bold text-emerald-600 mt-1";
-                } else if (accuracyVal >= 50) {
-                    accuracyValEl.className = "text-3xl font-bold text-amber-500 mt-1";
-                } else {
-                    accuracyValEl.className = "text-3xl font-bold text-red-500 mt-1";
-                }
-            } else {
-                accuracyValEl.innerText = "0%";
-                accuracyValEl.className = "text-3xl font-bold text-emerald-600 mt-1";
-                correctRatioTextEl.innerText = "Chưa có câu trả lời";
-            }
-        }
+function answer(id, selected){
+  if(answered[id]) return;
+  const q = QUESTIONS.find(x => x.id === id);
+  const correct = selected === q.a;
+  answered[id] = { selected, correct };
 
-        // Filter Action
-        const filterButtons = document.querySelectorAll('.filter-btn');
-        filterButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                filterButtons.forEach(b => b.classList.remove('active', 'bg-blue-100', 'text-blue-800',
-                    'border-blue-200'));
-                filterButtons.forEach(b => b.classList.add('bg-slate-100', 'text-slate-600',
-                    'border-slate-200'));
+  // update card
+  const card = document.getElementById('qcard-'+id);
+  card.classList.add(correct ? 'answered-correct' : 'answered-wrong');
+  const opts = document.querySelectorAll(`#opts-${id} .option`);
+  opts.forEach((btn, i) => {
+    btn.classList.add('disabled');
+    if(i === q.a) btn.classList.add('correct');
+    else if(i === selected) btn.classList.add('wrong');
+    btn.onclick = null;
+  });
+  const fb = document.getElementById('fb-'+id);
+  fb.textContent = (correct ? '✅ Chính xác! ' : '❌ Sai rồi! ') + q.ex;
+  fb.className = 'q-feedback show ' + (correct ? 'correct-fb' : 'wrong-fb');
 
-                btn.classList.add('active', 'bg-blue-100', 'text-blue-800', 'border-blue-200');
-                btn.classList.remove('bg-slate-100', 'text-slate-600', 'border-slate-200');
+  updateStats();
+  checkDone();
+}
 
-                currentFilter = btn.getAttribute('data-filter');
-                renderQuestions();
-            });
-        });
+function updateStats(){
+  const total = QUESTIONS.length;
+  const done = Object.keys(answered).length;
+  const correct = Object.values(answered).filter(a => a.correct).length;
+  const acc = done ? Math.round(correct/done*100) : 0;
 
-        // Search Input Listener
-        searchInput.addEventListener('input', renderQuestions);
+  document.getElementById('s-done').textContent = done;
+  document.getElementById('s-correct').textContent = correct;
+  document.getElementById('s-acc').textContent = acc + '%';
 
-        // Reset Quiz Button
-        document.getElementById('resetBtn').addEventListener('click', () => {
-            if (confirm(
-                "Bạn có chắc muốn làm lại từ đầu không? Toàn bộ tiến trình làm bài hiện tại sẽ bị xóa.")) {
-                userAnswers = {};
-                localStorage.removeItem('dhen08_quiz_answers');
-                updateStats();
-                renderQuestions();
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            }
-        });
+  const pct = Math.round(done/total*100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-text').textContent = done + ' / ' + total + ' câu';
+}
 
-        // Theme Toggle (Light / Dark Mode)
-        const themeToggle = document.getElementById('themeToggle');
-        let isDarkMode = localStorage.getItem('dhen08_darkMode') === 'true';
+function checkDone(){
+  const done = Object.keys(answered).length;
+  if(done === QUESTIONS.length){
+    const correct = Object.values(answered).filter(a => a.correct).length;
+    const score = (correct/QUESTIONS.length*10).toFixed(1);
+    document.getElementById('result-score').textContent = score + ' / 10';
+    const pct = Math.round(correct/QUESTIONS.length*100);
+    let msg = '';
+    if(pct >= 90) msg = '🏆 Xuất sắc! Bạn sẵn sàng cho kỳ thi rồi!';
+    else if(pct >= 75) msg = '👍 Tốt lắm! Ôn thêm một chút nữa là hoàn hảo.';
+    else if(pct >= 55) msg = '📖 Cần cố gắng thêm – ôn lại ngữ pháp và từ vựng nhé!';
+    else msg = '💪 Hãy ôn lại từ đầu, bạn có thể làm tốt hơn!';
+    document.getElementById('result-msg').textContent = `${correct}/${QUESTIONS.length} câu đúng (${pct}%) • ${msg}`;
+    document.getElementById('result-banner').style.display = 'block';
+    scrollToResult();
+  }
+}
 
-        function applyTheme() {
-            if (isDarkMode) {
-                document.body.classList.add('bg-slate-900', 'text-slate-100');
-                document.body.classList.remove('bg-slate-50', 'text-slate-800');
-                themeToggle.innerHTML = "☀️ Chế độ sáng";
+function scrollToResult(){
+  const el = document.getElementById('result-banner');
+  if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+}
 
-                // Cập nhật phong cách cho các khối box
-                document.querySelectorAll('.bg-white').forEach(el => {
-                    el.classList.add('bg-slate-800', 'border-slate-700', 'text-slate-200');
-                    el.classList.remove('bg-white', 'border-slate-200');
-                });
-            } else {
-                document.body.classList.remove('bg-slate-900', 'text-slate-100');
-                document.body.classList.add('bg-slate-50', 'text-slate-800');
-                themeToggle.innerHTML = "🌓 Chế độ tối";
+function resetAll(){
+  answered = {};
+  document.getElementById('result-banner').style.display = 'none';
+  renderAll();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
 
-                document.querySelectorAll('.bg-slate-800').forEach(el => {
-                    el.classList.add('bg-white', 'border-slate-200');
-                    el.classList.remove('bg-slate-800', 'border-slate-700', 'text-slate-200');
-                });
-            }
-        }
+function filterBy(f, btn){
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.qcard').forEach(card => {
+    const id = parseInt(card.id.replace('qcard-',''));
+    const q = QUESTIONS.find(x => x.id === id);
+    card.classList.toggle('hidden', !matchesFilter(q, f));
+  });
+}
 
-        themeToggle.addEventListener('click', () => {
-            isDarkMode = !isDarkMode;
-            localStorage.setItem('dhen08_darkMode', isDarkMode);
-            applyTheme();
-            renderQuestions(); // Rerender to apply background classes to dynamically created elements
-        });
+// FAB scroll button
+window.addEventListener('scroll', () => {
+  document.getElementById('fab').style.display = window.scrollY > 400 ? 'flex' : 'none';
+});
 
-        // Init App on Load
-        function initApp() {
-            const savedAnswers = localStorage.getItem('dhen08_quiz_answers');
-            if (savedAnswers) {
-                userAnswers = JSON.parse(savedAnswers);
-            }
-            applyTheme();
-            updateStats();
-            renderQuestions();
-        }
-
-        window.onload = initApp;
-    </script>
+// init
+renderAll();
+</script>
 </body>
-
 </html>
