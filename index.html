@@ -1,665 +1,350 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ôn Thi Tiếng Anh 2 – DHEN08 | 200 Câu Trắc Nghiệm</title>
+
 <style>
-  :root {
-    --bg: #0f1117;
-    --surface: #1a1d27;
-    --card: #22263a;
-    --border: #2e3350;
-    --accent: #6c8eff;
-    --accent2: #a78bfa;
-    --correct: #34d399;
-    --wrong: #f87171;
-    --text: #e2e8f0;
-    --muted: #8892b0;
-    --tag-bg: #1e2640;
-    --radius: 12px;
-    --shadow: 0 4px 24px rgba(0,0,0,0.4);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    min-height: 100vh;
-    line-height: 1.6;
-  }
-
-  /* HEADER */
-  header {
-    background: linear-gradient(135deg, #1a1d27 0%, #0f1117 100%);
-    border-bottom: 1px solid var(--border);
-    padding: 20px 24px;
-    position: sticky; top: 0; z-index: 100;
-    backdrop-filter: blur(10px);
-  }
-  .header-inner {
-    max-width: 900px; margin: 0 auto;
-    display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
-  }
-  .header-title { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
-  .header-sub { font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
-  .header-actions { display: flex; gap: 10px; align-items: center; }
-  .btn {
-    padding: 8px 16px; border-radius: 8px; border: none;
-    font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all .2s;
-  }
-  .btn-ghost {
-    background: var(--tag-bg); color: var(--text);
-    border: 1px solid var(--border);
-  }
-  .btn-ghost:hover { background: var(--border); }
-  .btn-primary {
-    background: var(--accent); color: #fff;
-  }
-  .btn-primary:hover { opacity: .85; }
-
-  /* HERO */
-  .hero {
-    max-width: 900px; margin: 0 auto;
-    padding: 40px 24px 24px;
-    text-align: center;
-  }
-  .hero h1 {
-    font-size: 2rem; font-weight: 800;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    margin-bottom: 8px;
-  }
-  .hero p { color: var(--muted); font-size: 0.9rem; }
-
-  /* STATS BAR */
-  .stats-bar {
-    max-width: 900px; margin: 0 auto 20px;
-    padding: 0 24px;
-    display: flex; gap: 12px; flex-wrap: wrap;
-  }
-  .stat-chip {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 8px; padding: 10px 18px;
-    display: flex; flex-direction: column; align-items: center;
-    flex: 1; min-width: 100px;
-  }
-  .stat-num { font-size: 1.4rem; font-weight: 800; color: var(--accent); }
-  .stat-lbl { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
-
-  /* PROGRESS BAR */
-  .progress-wrap {
-    max-width: 900px; margin: 0 auto 8px; padding: 0 24px;
-  }
-  .progress-track {
-    height: 6px; background: var(--border); border-radius: 99px; overflow: hidden;
-  }
-  .progress-fill {
-    height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2));
-    border-radius: 99px; transition: width .4s ease;
-  }
-  .progress-text {
-    font-size: 0.75rem; color: var(--muted); margin-top: 4px; text-align: right;
-  }
-
-  /* FILTERS */
-  .filters {
-    max-width: 900px; margin: 0 auto 24px; padding: 0 24px;
-    display: flex; gap: 8px; flex-wrap: wrap;
-  }
-  .filter-btn {
-    padding: 6px 14px; border-radius: 20px; border: 1px solid var(--border);
-    background: var(--tag-bg); color: var(--muted);
-    font-size: 0.78rem; cursor: pointer; transition: all .2s;
-  }
-  .filter-btn:hover, .filter-btn.active {
-    background: var(--accent); color: #fff; border-color: var(--accent);
-  }
-
-  /* QUESTIONS */
-  .questions-list {
-    max-width: 900px; margin: 0 auto; padding: 0 24px 80px;
-    display: flex; flex-direction: column; gap: 16px;
-  }
-  .qcard {
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 20px 22px;
-    transition: border-color .2s;
-  }
-  .qcard.answered-correct { border-color: var(--correct); }
-  .qcard.answered-wrong { border-color: var(--wrong); }
-  .qcard.hidden { display: none; }
-
-  .q-meta {
-    display: flex; gap: 8px; align-items: center; margin-bottom: 10px; flex-wrap: wrap;
-  }
-  .q-num {
-    font-size: 0.72rem; font-weight: 700; color: var(--accent);
-    background: rgba(108,142,255,.12); padding: 3px 9px; border-radius: 6px;
-  }
-  .q-unit {
-    font-size: 0.72rem; color: var(--muted);
-    background: var(--tag-bg); padding: 3px 9px; border-radius: 6px;
-    border: 1px solid var(--border);
-  }
-  .q-topic {
-    font-size: 0.72rem; color: var(--accent2);
-    background: rgba(167,139,250,.08); padding: 3px 9px; border-radius: 6px;
-  }
-
-  .q-text {
-    font-size: 1rem; font-weight: 500; color: var(--text);
-    margin-bottom: 14px; line-height: 1.7;
-  }
-  .q-text em { color: var(--accent); font-style: normal; font-weight: 600; }
-
-  .options {
-    display: flex; flex-direction: column; gap: 8px;
-  }
-  .option {
-    padding: 10px 15px; border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text); font-size: 0.88rem;
-    cursor: pointer; transition: all .18s; text-align: left;
-  }
-  .option:hover:not(.disabled) { border-color: var(--accent); background: rgba(108,142,255,.08); }
-  .option.correct { background: rgba(52,211,153,.12); border-color: var(--correct); color: var(--correct); }
-  .option.wrong { background: rgba(248,113,113,.10); border-color: var(--wrong); color: var(--wrong); }
-  .option.disabled { cursor: default; }
-
-  .q-feedback {
-    margin-top: 12px; font-size: 0.83rem; color: var(--muted);
-    background: var(--tag-bg); border-radius: 8px; padding: 9px 13px;
-    border-left: 3px solid var(--accent); display: none;
-  }
-  .q-feedback.show { display: block; }
-  .q-feedback.correct-fb { border-color: var(--correct); }
-  .q-feedback.wrong-fb { border-color: var(--wrong); }
-
-  /* RESULT BANNER */
-  .result-banner {
-    max-width: 900px; margin: 0 auto 16px; padding: 0 24px;
-    display: none;
-  }
-  .result-inner {
-    background: linear-gradient(135deg, var(--card), var(--surface));
-    border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 28px; text-align: center;
-  }
-  .result-score {
-    font-size: 3rem; font-weight: 900;
-    background: linear-gradient(90deg, var(--accent), var(--accent2));
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
-  .result-msg { font-size: 1rem; color: var(--muted); margin-top: 6px; }
-
-  /* BACK TO TOP */
-  .fab {
-    position: fixed; bottom: 24px; right: 24px;
-    background: var(--accent); color: #fff;
-    border: none; border-radius: 50%; width: 46px; height: 46px;
-    font-size: 1.2rem; cursor: pointer; box-shadow: var(--shadow);
-    transition: opacity .2s; display: none; z-index: 999;
-  }
-  .fab:hover { opacity: .85; }
-
-  @media (max-width: 600px) {
-    .hero h1 { font-size: 1.4rem; }
-    .header-title { font-size: 0.95rem; }
-    .stat-num { font-size: 1.1rem; }
-  }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:inherit}
+.wrap{padding:12px 0}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.tab{padding:5px 12px;border-radius:20px;border:0.5px solid var(--color-border-secondary);font-size:12px;cursor:pointer;background:var(--color-background-secondary);color:var(--color-text-secondary);transition:all .15s}
+.tab.active{background:var(--color-text-primary);color:var(--color-background-primary);border-color:transparent}
+.canvas-wrap{border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);overflow:hidden;background:var(--color-background-secondary)}
+svg .ent-rect{fill:#2E75B6;stroke:#1F4E79;stroke-width:1.5}
+svg .ent-text{fill:white;font-size:12px;font-weight:600;font-family:inherit;dominant-baseline:central;text-anchor:middle}
+svg .weak-rect{fill:#1F4E79;stroke:#1F4E79;stroke-width:1.5}
+svg .weak-outer{fill:none;stroke:#1F4E79;stroke-width:1.5}
+svg .rel-fill{fill:#ED7D31;stroke:#C55A11;stroke-width:1}
+svg .rel-text{fill:white;font-size:10px;font-weight:700;font-family:inherit;dominant-baseline:central;text-anchor:middle}
+svg .attr-fill{fill:#fff;stroke:#2E75B6;stroke-width:1}
+svg .attr-text{fill:#1A1A1A;font-size:10px;font-family:inherit;dominant-baseline:central;text-anchor:middle}
+svg .key-fill{fill:#FFF2CC;stroke:#C7A52B;stroke-width:1.2}
+svg .multi-fill{fill:#E2EFDA;stroke:#2E75B6;stroke-width:1}
+svg .conn{stroke:#555;stroke-width:1.2;fill:none}
+svg .card{fill:#C00000;font-size:9px;font-weight:700;font-family:inherit;dominant-baseline:central;text-anchor:middle}
+svg .lbl{fill:var(--color-text-secondary);font-size:10px;font-family:inherit;dominant-baseline:central;text-anchor:middle}
+@media(prefers-color-scheme:dark){
+  svg .attr-fill{fill:#2a2a2a;stroke:#6aabee}
+  svg .attr-text{fill:#e0e0e0}
+  svg .key-fill{fill:#3d3000;stroke:#c9a32a}
+  svg .multi-fill{fill:#1a2d15;stroke:#6aabee}
+  svg .ent-rect{fill:#2E75B6}
+  svg .weak-rect{fill:#1a3a5c}
+  svg .weak-outer{stroke:#4a8bc4}
+}
 </style>
-</head>
-<body>
-
-<header>
-  <div class="header-inner">
-    <div>
-      <div class="header-title">🎓 DHEN08 – Tiếng Anh 2</div>
-      <div class="header-sub">Học viện Công nghệ Bưu chính Viễn thông • 200 Câu Trắc Nghiệm</div>
-    </div>
-    <div class="header-actions">
-      <button class="btn btn-ghost" onclick="resetAll()">↺ Làm lại</button>
-      <button class="btn btn-primary" onclick="scrollToResult()">Xem điểm</button>
-    </div>
-  </div>
-</header>
-
-<div class="hero">
-  <h1>200 Câu Luyện Tập Cuối Kỳ</h1>
-  <p>Từ vựng & Ngữ pháp tổng hợp 15 Unit theo đề cương DHEN08 • Trả lời để xem giải thích ngay</p>
+<div class="wrap">
+<h2 class="sr-only">Trình xem sơ đồ ER – Các bài tập cơ sở dữ liệu</h2>
+<div class="tabs" id="tabs"></div>
+<div class="canvas-wrap">
+<svg id="ersvg" width="100%" viewBox="0 0 680 500" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+</svg>
 </div>
-
-<!-- Stats -->
-<div class="stats-bar">
-  <div class="stat-chip"><div class="stat-num" id="s-total">200</div><div class="stat-lbl">Tổng câu</div></div>
-  <div class="stat-chip"><div class="stat-num" id="s-done">0</div><div class="stat-lbl">Đã làm</div></div>
-  <div class="stat-chip"><div class="stat-num" id="s-correct">0</div><div class="stat-lbl">Đúng ✓</div></div>
-  <div class="stat-chip"><div class="stat-num" id="s-acc">0%</div><div class="stat-lbl">Chính xác</div></div>
+<div id="legend" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:12px;font-size:11px;color:var(--color-text-secondary)">
+  <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:10px;background:#2E75B6;border-radius:2px;display:inline-block"></span>Thực thể</span>
+  <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:10px;background:#ED7D31;transform:rotate(45deg);display:inline-block"></span>Mối quan hệ</span>
+  <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:10px;background:#FFF2CC;border:1px solid #C7A52B;border-radius:8px;display:inline-block"></span>Thuộc tính khóa</span>
+  <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:10px;background:#E2EFDA;border:1px solid #2E75B6;border-radius:8px;display:inline-block"></span>Thuộc tính đa trị</span>
+  <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:10px;background:#fff;border:1px solid #2E75B6;border-radius:8px;display:inline-block"></span>Thuộc tính thường</span>
+  <span style="display:flex;align-items:center;gap:4px"><span style="width:14px;height:10px;background:#1F4E79;border-radius:2px;display:inline-block"></span>Thực thể yếu</span>
 </div>
-
-<!-- Progress -->
-<div class="progress-wrap">
-  <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
-  <div class="progress-text" id="prog-text">0 / 200 câu</div>
 </div>
-
-<!-- Filters -->
-<div class="filters">
-  <button class="filter-btn active" onclick="filterBy('all',this)">Tất cả (200)</button>
-  <button class="filter-btn" onclick="filterBy('1-3',this)">Unit 1–3</button>
-  <button class="filter-btn" onclick="filterBy('4-6',this)">Unit 4–6</button>
-  <button class="filter-btn" onclick="filterBy('7-9',this)">Unit 7–9</button>
-  <button class="filter-btn" onclick="filterBy('10-12',this)">Unit 10–12</button>
-  <button class="filter-btn" onclick="filterBy('13-15',this)">Unit 13–15</button>
-  <button class="filter-btn" onclick="filterBy('grammar',this)">📚 Ngữ pháp</button>
-  <button class="filter-btn" onclick="filterBy('vocab',this)">📖 Từ vựng</button>
-</div>
-
-<!-- Result banner (hidden until answered all) -->
-<div class="result-banner" id="result-banner">
-  <div class="result-inner">
-    <div class="result-score" id="result-score">–</div>
-    <div class="result-msg" id="result-msg"></div>
-    <button class="btn btn-primary" style="margin-top:16px" onclick="resetAll()">↺ Làm lại từ đầu</button>
-  </div>
-</div>
-
-<!-- Questions -->
-<div class="questions-list" id="questions-list"></div>
-
-<button class="fab" id="fab" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
 
 <script>
-// ─────────────────────────────────────────────
-//  DATA – 200 questions
-// ─────────────────────────────────────────────
-const QUESTIONS = [
-// ── UNIT 1 – Emotions (Past Continuous, adj) ──
-{id:1,unit:1,topic:"vocab",q:"She looked <em>___</em> when she heard the unexpected news about her job.",o:["bored","excited","patient","lonely"],a:1,ex:"'Excited' = hứng khởi – phù hợp khi nghe tin bất ngờ tích cực."},
-{id:2,unit:1,topic:"grammar",q:"While Tom <em>___</em> his homework, his sister was watching TV.",o:["did","was doing","does","has done"],a:1,ex:"Past Continuous: while + was/were + Ving – diễn tả hành động đang xảy ra song song."},
-{id:3,unit:1,topic:"vocab",q:"After the long flight, the passengers felt extremely <em>___</em>.",o:["nervous","tired","relaxed","smart"],a:1,ex:"'Tired' = mệt – hợp lý sau chuyến bay dài."},
-{id:4,unit:1,topic:"grammar",q:"I <em>___</em> a book when the phone rang.",o:["read","was reading","have read","am reading"],a:1,ex:"'Was reading' – hành động đang xảy ra (quá khứ tiếp diễn) thì bị gián đoạn bởi 'the phone rang'."},
-{id:5,unit:1,topic:"vocab",q:"The children became <em>___</em> waiting two hours for the bus.",o:["calm","bored","surprised","relaxed"],a:1,ex:"'Bored' = chán – hợp lý khi phải chờ đợi lâu."},
-{id:6,unit:1,topic:"grammar",q:"At 9 p.m. last night, we <em>___</em> dinner together.",o:["have","had","were having","will have"],a:2,ex:"Past Continuous: were having – hành động đang diễn ra tại thời điểm cụ thể trong quá khứ."},
-{id:7,unit:1,topic:"vocab",q:"She stayed <em>___</em> even though everyone around her was panicking.",o:["lonely","calm","bored","nervous"],a:1,ex:"'Calm' = bình tĩnh – đối lập với hành động hoảng loạn xung quanh."},
-{id:8,unit:1,topic:"grammar",q:"What <em>___</em> you <em>___</em> when I called you this morning?",o:["do…do","did…do","were…doing","have…done"],a:2,ex:"Câu hỏi Past Continuous: What were you doing? – hỏi về hành động đang diễn ra trong quá khứ."},
-{id:9,unit:1,topic:"vocab",q:"He felt <em>___</em> because all his friends had gone on holiday without him.",o:["relaxed","smart","lonely","patient"],a:2,ex:"'Lonely' = cô đơn – bạn bè đều đi vắng."},
-{id:10,unit:1,topic:"grammar",q:"While she <em>___</em> in the garden, her dog <em>___</em> out of the gate.",o:["works / runs","was working / ran","worked / was running","has worked / runs"],a:1,ex:"QKTD + QKĐ: hành động dài (was working) bị gián đoạn bởi hành động ngắn (ran)."},
+const diagrams = {
+  "Câu 1 – Giảng dạy": {
+    vb:"0 0 680 520",
+    entities:[
+      {id:'KHOA',x:120,y:60,label:'KHOA',weak:false},
+      {id:'GV',x:120,y:220,label:'GIAO VIEN',weak:false},
+      {id:'MH',x:500,y:220,label:'MON HOC',weak:false},
+      {id:'GD',x:310,y:380,label:'GIANGDAY',weak:false},
+    ],
+    rels:[
+      {id:'r1',x:120,y:140,label:'trực thuộc',conns:[{to:'KHOA',cx1:120,cy1:140,cx2:120,cy2:95,card:'1,1'},{to:'GV',cx1:120,cy1:140,cx2:120,cy2:255,card:'1,N'}]},
+      {id:'r2',x:310,y:60,label:'quản lý MH',conns:[{to:'KHOA',cx1:310,cy1:60,cx2:195,cy2:60,card:'1,1'},{to:'MH',cx1:310,cy1:60,cx2:440,cy2:60,card:'1,N'}]},
+      {id:'r3',x:310,y:300,label:'phân công',conns:[{to:'GV',cx1:260,cy1:300,cx2:190,cy2:255,card:'1,N'},{to:'MH',cx1:360,cy1:300,cx2:440,cy2:255,card:'1,N'},{to:'GD',cx1:310,cy1:310,cx2:310,cy2:365,card:'1,1'}]},
+    ],
+    attrs:[
+      {x:20,y:30,label:'MAKHOA',key:true,to:'KHOA',tx:120,ty:60},
+      {x:200,y:30,label:'TENKHOA',key:false,to:'KHOA',tx:120,ty:60},
+      {x:320,y:30,label:'NGTLAP',key:false,to:'KHOA',tx:120,ty:60},
+      {x:20,y:190,label:'MAGV',key:true,to:'GV',tx:120,ty:220},
+      {x:20,y:260,label:'HOTEN',key:false,to:'GV',tx:120,ty:220},
+      {x:20,y:300,label:'MUCLUONG',key:false,to:'GV',tx:120,ty:220},
+      {x:430,y:165,label:'MAMH',key:true,to:'MH',tx:500,ty:220},
+      {x:560,y:165,label:'TENMH',key:false,to:'MH',tx:500,ty:220},
+      {x:610,y:220,label:'TCLT',key:false,to:'MH',tx:500,ty:220},
+      {x:610,y:270,label:'TCTH',key:false,to:'MH',tx:500,ty:220},
+      {x:200,y:380,label:'LOP',key:true,to:'GD',tx:310,ty:380},
+      {x:310,y:450,label:'HOCKY',key:false,to:'GD',tx:310,ty:380},
+      {x:420,y:450,label:'NAM',key:false,to:'GD',tx:310,ty:380},
+      {x:460,y:390,label:'TUNGAY',key:false,to:'GD',tx:310,ty:380},
+    ]
+  },
+  "Câu 3 – ĐT khách hàng": {
+    vb:"0 0 680 320",
+    entities:[
+      {id:'KH',x:130,y:160,label:'KHACH HANG',weak:false},
+      {id:'DT',x:340,y:160,label:'DIEN THOAI',weak:false},
+      {id:'DV',x:560,y:160,label:'DICH VU',weak:false},
+    ],
+    rels:[
+      {id:'r1',x:235,y:160,label:'sở hữu',conns:[{to:'KH',cx1:215,cy1:160,cx2:195,cy2:160,card:'1,1'},{to:'DT',cx1:255,cy1:160,cx2:285,cy2:160,card:'1,N'}]},
+      {id:'r2',x:452,y:160,label:'đăng ký',conns:[{to:'DT',cx1:432,cy1:160,cx2:405,cy2:160,card:'1,N'},{to:'DV',cx1:472,cy1:160,cx2:505,cy2:160,card:'1,N'}]},
+    ],
+    attrs:[
+      {x:60,y:80,label:'MAKH',key:true,to:'KH',tx:130,ty:160},
+      {x:130,y:70,label:'TENKH',key:false,to:'KH',tx:130,ty:160},
+      {x:50,y:240,label:'DIACHI',key:false,to:'KH',tx:130,ty:160},
+      {x:270,y:80,label:'SODT',key:true,to:'DT',tx:340,ty:160},
+      {x:350,y:70,label:'LOAIDT',key:false,to:'DT',tx:340,ty:160},
+      {x:340,y:260,label:'SOHD',key:false,to:'DT',tx:340,ty:160},
+      {x:490,y:70,label:'MADV',key:true,to:'DV',tx:560,ty:160},
+      {x:600,y:80,label:'TENDV',key:false,to:'DV',tx:560,ty:160},
+    ]
+  },
+  "Câu 6 – Phòng thực hành": {
+    vb:"0 0 680 380",
+    entities:[
+      {id:'PM',x:160,y:190,label:'PHONG MAY',weak:false},
+      {id:'MT',x:400,y:100,label:'MAY TINH',weak:false},
+      {id:'MON',x:560,y:250,label:'MON HOC',weak:false},
+    ],
+    rels:[
+      {id:'r1',x:270,y:145,label:'bố trí',conns:[{to:'PM',cx1:250,cy1:145,cx2:220,cy2:180,card:'1,1'},{to:'MT',cx1:290,cy1:145,cx2:350,cy2:120,card:'1,N'}]},
+      {id:'r2',x:360,y:250,label:'đăng ký',conns:[{to:'PM',cx1:335,cy1:250,cx2:220,cy2:220,card:'1,N'},{to:'MON',cx1:390,cy1:250,cx2:510,cy2:250,card:'1,N'}]},
+    ],
+    attrs:[
+      {x:50,y:130,label:'MaPhong',key:true,to:'PM',tx:160,ty:190},
+      {x:50,y:200,label:'TenPhong',key:false,to:'PM',tx:160,ty:190},
+      {x:50,y:260,label:'TenNguoiQL',key:false,to:'PM',tx:160,ty:190},
+      {x:320,y:30,label:'MaMay',key:true,to:'MT',tx:400,ty:100},
+      {x:440,y:30,label:'TocDoCPU',key:false,to:'MT',tx:400,ty:100},
+      {x:550,y:50,label:'RAM',key:false,to:'MT',tx:400,ty:100},
+      {x:610,y:100,label:'HDD',key:false,to:'MT',tx:400,ty:100},
+      {x:360,y:320,label:'NgayDangKy',key:false,to:'r2',tx:360,ty:250},
+      {x:500,y:310,label:'MaMon',key:true,to:'MON',tx:560,ty:250},
+      {x:610,y:250,label:'TenMon',key:false,to:'MON',tx:560,ty:250},
+      {x:610,y:310,label:'ThoiLuong',key:false,to:'MON',tx:560,ty:250},
+    ]
+  },
+  "Câu 9 – Tạp chí": {
+    vb:"0 0 680 300",
+    entities:[
+      {id:'TC',x:140,y:150,label:'TAP CHI',weak:false},
+      {id:'BB',x:360,y:150,label:'BAI BAO',weak:false},
+      {id:'TG',x:570,y:150,label:'TAC GIA',weak:false},
+    ],
+    rels:[
+      {id:'r1',x:250,y:150,label:'thuộc',conns:[{to:'TC',cx1:230,cy1:150,cx2:195,cy2:150,card:'1,1'},{to:'BB',cx1:270,cy1:150,cx2:315,cy2:150,card:'1,N'}]},
+      {id:'r2',x:465,y:150,label:'viết',conns:[{to:'BB',cx1:445,cy1:150,cx2:415,cy2:150,card:'1,N'},{to:'TG',cx1:485,cy1:150,cx2:525,cy2:150,card:'1,N'}]},
+    ],
+    attrs:[
+      {x:40,y:80,label:'ISSN',key:true,to:'TC',tx:140,ty:150},
+      {x:130,y:60,label:'TenTapChi',key:false,to:'TC',tx:140,ty:150},
+      {x:40,y:230,label:'SoPhatHanh',key:false,to:'TC',tx:140,ty:150},
+      {x:140,y:260,label:'NamPhatHanh',key:false,to:'TC',tx:140,ty:150},
+      {x:280,y:60,label:'TieuDe',key:true,to:'BB',tx:360,ty:150},
+      {x:380,y:60,label:'TrangBD',key:false,to:'BB',tx:360,ty:150},
+      {x:360,y:250,label:'TrangKT',key:false,to:'BB',tx:360,ty:150},
+      {x:490,y:60,label:'MaTacGia',key:true,to:'TG',tx:570,ty:150},
+      {x:600,y:80,label:'Ten',key:false,to:'TG',tx:570,ty:150},
+      {x:620,y:150,label:'Email',key:false,to:'TG',tx:570,ty:150},
+      {x:610,y:230,label:'CoQuan',key:false,to:'TG',tx:570,ty:150},
+    ]
+  },
+  "Câu 12 – Khoáng sản": {
+    vb:"0 0 680 280",
+    entities:[
+      {id:'QG',x:180,y:140,label:'QUOC GIA',weak:false},
+      {id:'KS',x:500,y:140,label:'KHOANG SAN',weak:false},
+    ],
+    rels:[
+      {id:'r1',x:340,y:140,label:'có',conns:[{to:'QG',cx1:315,cy1:140,cx2:240,cy2:140,card:'1,N'},{to:'KS',cx1:365,cy1:140,cx2:440,cy2:140,card:'1,N'}]},
+    ],
+    attrs:[
+      {x:70,y:80,label:'TenQG',key:true,to:'QG',tx:180,ty:140},
+      {x:90,y:210,label:'GNP',key:false,to:'QG',tx:180,ty:140},
+      {x:310,y:210,label:'TruLuong',key:false,to:'r1',tx:340,ty:140},
+      {x:370,y:220,label:'SanLuong',key:false,to:'r1',tx:340,ty:140},
+      {x:440,y:60,label:'TenKS',key:true,to:'KS',tx:500,ty:140},
+      {x:570,y:60,label:'GiaHienHanh',key:false,to:'KS',tx:500,ty:140},
+    ]
+  },
+  "Câu 14 – Đặt báo": {
+    vb:"0 0 680 400",
+    entities:[
+      {id:'TL',x:120,y:140,label:'THE LOAI BAO',weak:false},
+      {id:'TB',x:340,y:140,label:'TO BAO',weak:false},
+      {id:'KH',x:120,y:300,label:'KHACH HANG',weak:false},
+      {id:'PD',x:340,y:300,label:'PHIEU DAT',weak:false},
+    ],
+    rels:[
+      {id:'r1',x:230,y:140,label:'thuộc',conns:[{to:'TL',cx1:210,cy1:140,cx2:180,cy2:140,card:'1,1'},{to:'TB',cx1:250,cy1:140,cx2:290,cy2:140,card:'1,N'}]},
+      {id:'r2',x:230,y:300,label:'lập',conns:[{to:'KH',cx1:210,cy1:300,cx2:180,cy2:300,card:'1,1'},{to:'PD',cx1:250,cy1:300,cx2:290,cy2:300,card:'1,N'}]},
+      {id:'r3',x:340,y:220,label:'chi tiết',conns:[{to:'TB',cx1:340,cy1:200,cx2:340,cy2:170,card:'1,N'},{to:'PD',cx1:340,cy1:240,cx2:340,cy2:280,card:'1,N'}]},
+    ],
+    attrs:[
+      {x:20,y:80,label:'MaTheLoai',key:true,to:'TL',tx:120,ty:140},
+      {x:120,y:50,label:'TenTheLoai',key:false,to:'TL',tx:120,ty:140},
+      {x:260,y:55,label:'MaBao',key:true,to:'TB',tx:340,ty:140},
+      {x:400,y:55,label:'TenBao',key:false,to:'TB',tx:340,ty:140},
+      {x:490,y:100,label:'DonGia',key:false,to:'TB',tx:340,ty:140},
+      {x:490,y:140,label:'DonGiaNam',key:false,to:'TB',tx:340,ty:140},
+      {x:20,y:240,label:'MaKH',key:true,to:'KH',tx:120,ty:300},
+      {x:20,y:310,label:'TenKH',key:false,to:'KH',tx:120,ty:300},
+      {x:20,y:370,label:'DiaChi',key:false,to:'KH',tx:120,ty:300},
+      {x:260,y:360,label:'SoPhieu',key:true,to:'PD',tx:340,ty:300},
+      {x:380,y:360,label:'NgayDat',key:false,to:'PD',tx:340,ty:300},
+      {x:430,y:220,label:'SoLuong',key:false,to:'r3',tx:340,ty:220},
+      {x:440,y:260,label:'SoKy',key:false,to:'r3',tx:340,ty:220},
+    ]
+  },
+  "Câu 19 – Cơ sở vật chất": {
+    vb:"0 0 680 300",
+    entities:[
+      {id:'TN',x:150,y:150,label:'TOA NHA',weak:false},
+      {id:'PHONG',x:380,y:150,label:'PHONG',weak:true},
+      {id:'VT',x:590,y:150,label:'VAT TU',weak:false},
+    ],
+    rels:[
+      {id:'r1',x:265,y:150,label:'chứa',weak:true,conns:[{to:'TN',cx1:245,cy1:150,cx2:210,cy2:150,card:'1,1'},{to:'PHONG',cx1:285,cy1:150,cx2:330,cy2:150,card:'1,N'}]},
+      {id:'r2',x:487,y:150,label:'trang bị',conns:[{to:'PHONG',cx1:462,cy1:150,cx2:430,cy2:150,card:'1,N'},{to:'VT',cx1:512,cy1:150,cx2:548,cy2:150,card:'1,N'}]},
+    ],
+    attrs:[
+      {x:50,y:80,label:'TenTN',key:true,to:'TN',tx:150,ty:150},
+      {x:60,y:230,label:'NamXD',key:false,to:'TN',tx:150,ty:150},
+      {x:290,y:60,label:'SoPhong',key:true,to:'PHONG',tx:380,ty:150},
+      {x:395,y:55,label:'ChucNang',key:false,to:'PHONG',tx:380,ty:150},
+      {x:480,y:65,label:'ChieuDai',key:false,to:'PHONG',tx:380,ty:150},
+      {x:390,y:265,label:'DienTich',key:false,derived:true,to:'PHONG',tx:380,ty:150},
+      {x:540,y:65,label:'MaVT',key:true,to:'VT',tx:590,ty:150},
+      {x:630,y:90,label:'TenVT',key:false,to:'VT',tx:590,ty:150},
+      {x:640,y:180,label:'MoTa',key:false,to:'VT',tx:590,ty:150},
+    ]
+  },
+  "Câu 20 – Mượn sách": {
+    vb:"0 0 680 370",
+    entities:[
+      {id:'DS',x:150,y:140,label:'DAU SACH',weak:false},
+      {id:'SC',x:380,y:140,label:'SACH',weak:false},
+      {id:'DG',x:150,y:290,label:'DOC GIA',weak:false},
+      {id:'TM',x:380,y:290,label:'THE MUON',weak:false},
+    ],
+    rels:[
+      {id:'r1',x:265,y:140,label:'bản sao',conns:[{to:'DS',cx1:245,cy1:140,cx2:210,cy2:140,card:'1,1'},{to:'SC',cx1:285,cy1:140,cx2:330,cy2:140,card:'1,N'}]},
+      {id:'r2',x:265,y:290,label:'lập thẻ',conns:[{to:'DG',cx1:245,cy1:290,cx2:210,cy2:290,card:'1,1'},{to:'TM',cx1:285,cy1:290,cx2:330,cy2:290,card:'1,N'}]},
+      {id:'r3',x:380,y:215,label:'mượn/trả',conns:[{to:'SC',cx1:380,cy1:195,cx2:380,cy2:165,card:'1,N'},{to:'TM',cx1:380,cy1:235,cx2:380,cy2:270,card:'1,N'}]},
+    ],
+    attrs:[
+      {x:30,y:80,label:'MaDauSach',key:true,to:'DS',tx:150,ty:140},
+      {x:40,y:210,label:'TenDauSach',key:false,to:'DS',tx:150,ty:140},
+      {x:270,y:55,label:'MaSach',key:true,to:'SC',tx:380,ty:140},
+      {x:390,y:55,label:'TenSach',key:false,to:'SC',tx:380,ty:140},
+      {x:510,y:70,label:'NXB',key:false,to:'SC',tx:380,ty:140},
+      {x:520,y:130,label:'NamXB',key:false,to:'SC',tx:380,ty:140},
+      {x:520,y:190,label:'TacGia',key:false,to:'SC',tx:380,ty:140},
+      {x:30,y:250,label:'MaDG',key:true,to:'DG',tx:150,ty:290},
+      {x:30,y:330,label:'TenDG',key:false,to:'DG',tx:150,ty:290},
+      {x:150,y:350,label:'NgaySinh',key:false,to:'DG',tx:150,ty:290},
+      {x:265,y:355,label:'SoThe',key:true,to:'TM',tx:380,ty:290},
+      {x:390,y:355,label:'NgayMuon',key:false,to:'TM',tx:380,ty:290},
+      {x:475,y:215,label:'NgayTra',key:false,to:'r3',tx:380,ty:215},
+    ]
+  },
+};
 
-// ── UNIT 2 – Health / Making excuses (Infinitive & Gerund) ──
-{id:11,unit:2,topic:"grammar",q:"The doctor advised him <em>___</em> sweet food.",o:["avoid","to avoid","avoiding","avoids"],a:1,ex:"'Advise + to V': advise sb to do sth."},
-{id:12,unit:2,topic:"vocab",q:"She went to the <em>___</em> because she had a terrible toothache.",o:["dentist","pill","fever","headache"],a:0,ex:"'Dentist' = nha sĩ – người khám răng."},
-{id:13,unit:2,topic:"grammar",q:"He enjoys <em>___</em> to music when he has a headache.",o:["listen","to listen","listening","listened"],a:2,ex:"'Enjoy + Ving': enjoy listening – gerund sau enjoy."},
-{id:14,unit:2,topic:"vocab",q:"The nurse gave the patient a <em>___</em> for the pain.",o:["pill","fever","operate","temperature"],a:0,ex:"'Pill' = viên thuốc – dùng để giảm đau."},
-{id:15,unit:2,topic:"grammar",q:"I need <em>___</em> a dentist about my tooth.",o:["seeing","see","to see","seen"],a:2,ex:"'Need + to V': need to see – need dùng với động từ nguyên thể có to."},
-{id:16,unit:2,topic:"vocab",q:"She had a <em>___</em> of 39°C, so she stayed home from school.",o:["pain","temperature","cold","headache"],a:1,ex:"'Temperature' = nhiệt độ cơ thể – dùng khi nói về sốt."},
-{id:17,unit:2,topic:"grammar",q:"My dentist suggested <em>___</em> my teeth twice a day.",o:["to brush","brush","brushing","brushed"],a:2,ex:"'Suggest + Ving': suggest brushing."},
-{id:18,unit:2,topic:"vocab",q:"The surgeon had to <em>___</em> on the patient immediately.",o:["brush","pain","operate","headache"],a:2,ex:"'Operate' = phẫu thuật – bác sĩ thực hiện ca mổ."},
-{id:19,unit:2,topic:"grammar",q:"She decided <em>___</em> to the doctor despite the high fever.",o:["go","to go","going","gone"],a:1,ex:"'Decide + to V': decide to go."},
-{id:20,unit:2,topic:"vocab",q:"He took a <em>___</em> to help with his headache.",o:["pill","cold","fever","dentist"],a:0,ex:"'Pill' = viên thuốc – uống để giảm đau đầu."},
-
-// ── UNIT 3 – Tickets / Entertainment (Gerund, Infinitive, Frequency) ──
-{id:21,unit:3,topic:"vocab",q:"The <em>___</em> showed us to our seats before the performance began.",o:["usher","musician","orchestra","auditorium"],a:0,ex:"'Usher' = người dẫn chỗ ngồi trong rạp hát."},
-{id:22,unit:3,topic:"grammar",q:"She <em>___</em> attends the theater – maybe once or twice a year.",o:["always","rarely","usually","often"],a:1,ex:"'Rarely' = hiếm khi – phù hợp với 'once or twice a year'."},
-{id:23,unit:3,topic:"vocab",q:"The <em>___</em> fell at the end of the first act, signaling intermission.",o:["curtain","aisle seat","program","audition"],a:0,ex:"'Curtain' = màn sân khấu – kéo xuống giữa các màn."},
-{id:24,unit:3,topic:"grammar",q:"He let his daughter <em>___</em> up late on weekends.",o:["stays","to stay","staying","stay"],a:3,ex:"'Let + V (bare infinitive)': let sb do sth – không có to."},
-{id:25,unit:3,topic:"vocab",q:"She got an <em>___</em> seat so she could get out quickly during the show.",o:["aisle","curtain","orchestra","audition"],a:0,ex:"'Aisle seat' = ghế gần lối đi – dễ ra vào."},
-{id:26,unit:3,topic:"grammar",q:"There <em>___</em> a famous musician performing at the auditorium tonight.",o:["are","have","is","be"],a:2,ex:"'There is' dùng với danh từ số ít: There is a famous musician."},
-{id:27,unit:3,topic:"vocab",q:"She went to an <em>___</em> to become part of the famous orchestra.",o:["usher","audition","program","curtain"],a:1,ex:"'Audition' = buổi thử giọng/thử vai."},
-{id:28,unit:3,topic:"grammar",q:"They prefer <em>___</em> aisle seats rather than sitting in the middle.",o:["book","to book","books","booked"],a:1,ex:"'Prefer + to V': prefer to book."},
-{id:29,unit:3,topic:"vocab",q:"The <em>___</em> played beautifully throughout the three-hour performance.",o:["program","part","orchestra","usher"],a:2,ex:"'Orchestra' = dàn nhạc giao hưởng."},
-{id:30,unit:3,topic:"grammar",q:"It is important <em>___</em> tickets early for popular shows.",o:["buy","buying","to buy","bought"],a:2,ex:"'It is + adj + to V' – cấu trúc chủ ngữ giả 'It'."},
-
-// ── UNIT 4 – Saving Energy (Conditionals 0 & 1) ──
-{id:31,unit:4,topic:"vocab",q:"You should <em>___</em> your phone charger when it is not in use.",o:["unplug","save energy","waste","thermostat"],a:0,ex:"'Unplug' = rút phích cắm – tiết kiệm điện."},
-{id:32,unit:4,topic:"grammar",q:"If you <em>___</em> water to 100°C, it boils. (Zero Conditional)",o:["heat","heated","will heat","would heat"],a:0,ex:"Zero Conditional: If + Present Simple, Present Simple – sự thật hiển nhiên."},
-{id:33,unit:4,topic:"vocab",q:"Solar and wind power are examples of <em>___</em>.",o:["fossil fuel","electricity bill","renewable energy","lightbulb"],a:2,ex:"'Renewable energy' = năng lượng tái tạo."},
-{id:34,unit:4,topic:"grammar",q:"If you <em>___</em> the thermostat, you will reduce your electricity bill.",o:["lower","will lower","lowered","have lowered"],a:0,ex:"First Conditional: If + Present Simple, will + V."},
-{id:35,unit:4,topic:"vocab",q:"Burning coal and oil produces <em>___</em> emissions that harm the environment.",o:["thermostat","fossil fuel","lightbulb","appliance"],a:1,ex:"'Fossil fuel' = nhiên liệu hóa thạch – than, dầu mỏ."},
-{id:36,unit:4,topic:"grammar",q:"If ice <em>___</em>, it becomes water. (general truth)",o:["melts","will melt","melted","has melted"],a:0,ex:"Zero Conditional dùng Present Simple ở cả hai mệnh đề."},
-{id:37,unit:4,topic:"vocab",q:"An energy-efficient <em>___</em> uses less electricity than a traditional one.",o:["thermostat","lightbulb","fossil fuel","unplug"],a:1,ex:"'Lightbulb' = bóng đèn – loại tiết kiệm điện dùng ít năng lượng hơn."},
-{id:38,unit:4,topic:"grammar",q:"If she <em>___</em> her electrical appliances off at night, her bill will decrease.",o:["will turn","turns","turned","turn"],a:1,ex:"First Conditional: If + V (present), S + will + V."},
-{id:39,unit:4,topic:"vocab",q:"The high <em>___</em> last month was because I forgot to unplug my appliances.",o:["electricity bill","renewable energy","fossil fuel","energy efficient"],a:0,ex:"'Electricity bill' = hóa đơn tiền điện."},
-{id:40,unit:4,topic:"grammar",q:"If plants <em>___</em> sunlight, they produce food. (Zero Conditional)",o:["didn't get","don't get","won't get","haven't got"],a:1,ex:"Zero Conditional phủ định: If + don't/doesn't, + don't/doesn't."},
-
-// ── UNIT 5 – Second Language (Review Tenses) ──
-{id:41,unit:5,topic:"vocab",q:"Someone who speaks two languages fluently is called <em>___</em>.",o:["monolingual","bilingual","multilingual","native speaker"],a:1,ex:"'Bilingual' = người nói được hai ngôn ngữ."},
-{id:42,unit:5,topic:"grammar",q:"She <em>___</em> English for three hours every day at the moment.",o:["studies","is studying","studied","has studied"],a:1,ex:"Present Continuous: is studying – hành động đang diễn ra."},
-{id:43,unit:5,topic:"vocab",q:"Learning a new language helps you understand a different <em>___</em> and way of life.",o:["vocabulary","culture","informal","formal"],a:1,ex:"'Culture' = văn hóa – gắn liền với ngôn ngữ."},
-{id:44,unit:5,topic:"grammar",q:"My sister <em>___</em> French when she was in high school.",o:["learns","is learning","learned","has learned"],a:2,ex:"Past Simple: learned – hành động hoàn thành trong quá khứ."},
-{id:45,unit:5,topic:"vocab",q:"Children who grow up speaking two languages from birth are considered <em>___</em>.",o:["multilingual","native speaker","formal","monolingual"],a:1,ex:"'Native speaker' = người nói tiếng mẹ đẻ – hoặc người lớn lên với một ngôn ngữ từ nhỏ."},
-{id:46,unit:5,topic:"grammar",q:"She <em>___</em> Japanese classes while she was living in Tokyo.",o:["takes","is taking","was taking","has taken"],a:2,ex:"Past Continuous: was taking – hành động đang diễn ra trong khoảng thời gian quá khứ."},
-{id:47,unit:5,topic:"vocab",q:"Email and messages to your boss should be <em>___</em>, not casual.",o:["informal","formal","bilingual","monolingual"],a:1,ex:"'Formal' = trang trọng – phù hợp với văn phong công việc."},
-{id:48,unit:5,topic:"grammar",q:"She always <em>___</em> her vocabulary notebook with her.",o:["carry","carried","carries","is carrying"],a:2,ex:"Present Simple + always: she carries – thói quen."},
-{id:49,unit:5,topic:"vocab",q:"Speaking multiple languages can positively influence your <em>___</em> and confidence.",o:["personality","raise","vocabulary","native"],a:0,ex:"'Personality' = tính cách – học ngôn ngữ mới thay đổi cách nhìn."},
-{id:50,unit:5,topic:"grammar",q:"While they were studying, they <em>___</em> a lot of new vocabulary.",o:["learn","are learning","were learning","have learned"],a:2,ex:"Hai hành động QKTD song song: were studying / were learning."},
-
-// ── UNIT 6 – Education (Present Perfect) ──
-{id:51,unit:6,topic:"vocab",q:"She received her university <em>___</em> after four years of study.",o:["degree","grade","assignment","diploma"],a:0,ex:"'Degree' = bằng đại học."},
-{id:52,unit:6,topic:"grammar",q:"I <em>___</em> never <em>___</em> a formal education abroad.",o:["have / received","did / receive","was / receiving","am / receiving"],a:0,ex:"Present Perfect với 'never': have never received."},
-{id:53,unit:6,topic:"vocab",q:"She finished her <em>___</em> and submitted it before the deadline.",o:["assignment","grade","entrance exam","kindergarten"],a:0,ex:"'Assignment' = bài tập được giao."},
-{id:54,unit:6,topic:"grammar",q:"They <em>___</em> just <em>___</em> their entrance exams.",o:["have / finished","did / finish","were / finishing","are / finishing"],a:0,ex:"Present Perfect với 'just': have just finished."},
-{id:55,unit:6,topic:"vocab",q:"Children in Vietnam start <em>___</em> at the age of five or six.",o:["preschool","grade","degree","diploma"],a:0,ex:"'Preschool' = mầm non / tiền tiểu học."},
-{id:56,unit:6,topic:"grammar",q:"She <em>___</em> already <em>___</em> her homework, so she can relax now.",o:["has / done","did / do","was / doing","is / doing"],a:0,ex:"Present Perfect với 'already': has already done."},
-{id:57,unit:6,topic:"vocab",q:"He studied very hard to pass the university <em>___</em>.",o:["entrance exam","diploma","qualification","kindergarten"],a:0,ex:"'Entrance exam' = kỳ thi đầu vào đại học."},
-{id:58,unit:6,topic:"grammar",q:"<em>___</em> you ever <em>___</em> to an international school?",o:["Have / been","Did / go","Were / going","Are / been"],a:0,ex:"Present Perfect với 'ever': Have you ever been?"},
-{id:59,unit:6,topic:"vocab",q:"After graduating, he received a <em>___</em> in business administration.",o:["diploma","grade","homework","assignment"],a:0,ex:"'Diploma' = bằng tốt nghiệp (thường sau khóa học ngắn hạn hoặc trường nghề)."},
-{id:60,unit:6,topic:"grammar",q:"She <em>___</em> not <em>___</em> her assignment yet.",o:["has / finished","did / finish","is / finishing","was / finishing"],a:0,ex:"Present Perfect phủ định với 'yet': has not finished yet."},
-
-// ── UNIT 7 – Study Abroad (Present Perfect Continuous) ──
-{id:61,unit:7,topic:"vocab",q:"She has been feeling <em>___</em> since she moved to a new country alone.",o:["homesick","bilingual","overseas","accent"],a:0,ex:"'Homesick' = nhớ nhà."},
-{id:62,unit:7,topic:"grammar",q:"He <em>___</em> English for 5 years and is still improving.",o:["has been studying","has studied","is studying","was studying"],a:0,ex:"Present Perfect Continuous nhấn mạnh quá trình: has been studying for 5 years."},
-{id:63,unit:7,topic:"vocab",q:"She is an <em>___</em> from Korea studying at a Vietnamese university.",o:["exchange student","roommate","accent","opportunity"],a:0,ex:"'Exchange student' = sinh viên trao đổi."},
-{id:64,unit:7,topic:"grammar",q:"They <em>___</em> for the exam since last Monday.",o:["have been preparing","have prepared","are preparing","prepared"],a:0,ex:"HTHT Tiếp diễn: have been preparing since – nhấn mạnh hành động liên tục từ mốc thời gian."},
-{id:65,unit:7,topic:"vocab",q:"Living <em>___</em> for a year improved her English significantly.",o:["overseas","transfer","homesick","accent"],a:0,ex:"'Overseas' = ở nước ngoài."},
-{id:66,unit:7,topic:"grammar",q:"How long <em>___</em> she <em>___</em> in the study exchange program?",o:["has / been participating","did / participate","was / participating","is / participating"],a:0,ex:"'How long + HTHT Tiếp diễn': How long has she been participating?"},
-{id:67,unit:7,topic:"vocab",q:"It is a great <em>___</em> to study at a top university abroad.",o:["opportunity","accent","roommate","miss"],a:0,ex:"'Opportunity' = cơ hội."},
-{id:68,unit:7,topic:"grammar",q:"She <em>___</em> her family since she left for her study program six months ago.",o:["has been missing","misses","missed","had missed"],a:0,ex:"HTHT Tiếp diễn: has been missing – trạng thái kéo dài đến hiện tại."},
-{id:69,unit:7,topic:"vocab",q:"They try to <em>___</em> via video calls every week.",o:["keep in touch","miss","transfer","raise"],a:0,ex:"'Keep in touch' = giữ liên lạc."},
-{id:70,unit:7,topic:"grammar",q:"I <em>___</em> here for two years but I still miss my hometown.",o:["have been living","lived","have lived","am living"],a:0,ex:"HTHT Tiếp diễn nhấn mạnh quá trình sống liên tục tới hiện tại."},
-
-// ── UNIT 8 – Celebrations (Passive Voice) ──
-{id:71,unit:8,topic:"vocab",q:"Fireworks <em>___</em> to celebrate the New Year in many countries.",o:["are used","used","using","be used"],a:0,ex:"Passive Voice: are used – fireworks (chủ thể) + are + PII."},
-{id:72,unit:8,topic:"grammar",q:"The parade <em>___</em> every year in honor of the national holiday.",o:["is organized","organizes","was organizing","organize"],a:0,ex:"Passive Present Simple: is organized – tổ chức hàng năm."},
-{id:73,unit:8,topic:"vocab",q:"The festival <em>___</em> the end of the harvest season.",o:["symbolizes","gathers","celebrates","announces"],a:0,ex:"'Symbolizes' = tượng trưng cho."},
-{id:74,unit:8,topic:"grammar",q:"Hundreds of lanterns <em>___</em> to light up the streets during the festival.",o:["were used","use","are using","used"],a:0,ex:"Passive Past Simple: were used."},
-{id:75,unit:8,topic:"vocab",q:"People <em>___</em> from all over the country to celebrate Thanksgiving.",o:["gather","symbolize","celebrate","parade"],a:0,ex:"'Gather' = tập hợp lại."},
-{id:76,unit:8,topic:"grammar",q:"Christmas <em>___</em> by millions of people around the world every year.",o:["is celebrated","celebrates","has celebrated","was celebrated"],a:0,ex:"Passive Present Simple: is celebrated – thói quen/sự thật."},
-{id:77,unit:8,topic:"vocab",q:"The annual fireworks <em>___</em> lit up the sky during the celebration.",o:["display","event","tradition","parade"],a:0,ex:"'Fireworks display' = màn trình diễn pháo hoa."},
-{id:78,unit:8,topic:"grammar",q:"The new school <em>___</em> last month by the local government.",o:["was built","built","has built","is built"],a:0,ex:"Passive Past Simple: was built by the local government."},
-{id:79,unit:8,topic:"vocab",q:"Giving gifts on Christmas is a long-standing <em>___</em> in many cultures.",o:["tradition","annual","parade","fair"],a:0,ex:"'Tradition' = truyền thống."},
-{id:80,unit:8,topic:"grammar",q:"The bridge <em>___</em> by a team of engineers over three years.",o:["was designed","designed","has designed","is designing"],a:0,ex:"Passive Past Simple với 'by': was designed by."},
-
-// ── UNIT 9 – Bad Weather (Relative Clauses) ──
-{id:81,unit:9,topic:"vocab",q:"There was a severe <em>___</em> that damaged many houses in the village.",o:["storm","fog","lightning","thunder"],a:0,ex:"'Storm' = bão – gây thiệt hại nhà cửa."},
-{id:82,unit:9,topic:"grammar",q:"The man <em>___</em> lives next door is a meteorologist.",o:["which","whose","who","whom"],a:2,ex:"'Who' thay thế cho người làm chủ ngữ."},
-{id:83,unit:9,topic:"vocab",q:"Drivers should slow down when there is heavy <em>___</em>.",o:["fog","thunder","lightning","sunshine"],a:0,ex:"'Fog' = sương mù – nguy hiểm khi lái xe."},
-{id:84,unit:9,topic:"grammar",q:"This is the town <em>___</em> I grew up.",o:["which","who","where","when"],a:2,ex:"'Where' thay thế cho nơi chốn."},
-{id:85,unit:9,topic:"vocab",q:"The <em>___</em> predicted heavy rains and strong winds for the weekend.",o:["weather report","flooding","frosty","bright sunshine"],a:0,ex:"'Weather report' = bản tin thời tiết."},
-{id:86,unit:9,topic:"grammar",q:"The students <em>___</em> scores were the highest received scholarships.",o:["who","which","that","whose"],a:3,ex:"'Whose' thay thế cho 'of them' – chỉ sở hữu."},
-{id:87,unit:9,topic:"vocab",q:"After the heavy rains, there was serious <em>___</em> in the low-lying areas.",o:["flooding","thunder","frosty","cloudy skies"],a:0,ex:"'Flooding' = lũ lụt."},
-{id:88,unit:9,topic:"grammar",q:"The day <em>___</em> we first met was a stormy one.",o:["where","when","who","which"],a:1,ex:"'When' thay thế cho thời gian."},
-{id:89,unit:9,topic:"vocab",q:"The roads were icy because of the <em>___</em> temperatures overnight.",o:["freezing","bright","stormy","cloudy"],a:0,ex:"'Freezing' = đóng băng – nhiệt độ cực lạnh."},
-{id:90,unit:9,topic:"grammar",q:"I dislike weather <em>___</em> is very hot and humid.",o:["who","whom","that","whose"],a:2,ex:"'That' thay thế cho vật (weather) làm chủ ngữ."},
-
-// ── UNIT 10 – Arts & Entertainment (Passive – indirect objects) ──
-{id:91,unit:10,topic:"vocab",q:"The art museum has a new <em>___</em> of paintings from the 18th century.",o:["collection","band","hit","sculpture"],a:0,ex:"'Collection' = bộ sưu tập."},
-{id:92,unit:10,topic:"grammar",q:"The teacher <em>___</em> us the results of the exam.",o:["was told","told","were told","is told"],a:1,ex:"Active: told – chủ ngữ (teacher) thực hiện hành động."},
-{id:93,unit:10,topic:"vocab",q:"The gallery <em>___</em> a new <em>___</em> of modern sculptures this weekend.",o:["opens / exhibition","writes / band","creates / hit","shows / fan club"],a:0,ex:"'Exhibition' = triển lãm."},
-{id:94,unit:10,topic:"grammar",q:"We <em>___</em> sent the tickets by the organizer.",o:["were","are","was","be"],a:0,ex:"Passive với hai tân ngữ: We were sent the tickets (by sb)."},
-{id:95,unit:10,topic:"vocab",q:"The <em>___</em> of the concert was over 10,000 people.",o:["attendance","sculpture","hit","fan club"],a:0,ex:"'Attendance' = số lượng người tham dự."},
-{id:96,unit:10,topic:"grammar",q:"She <em>___</em> asked to perform at the exhibition opening ceremony.",o:["was","were","has","is being"],a:0,ex:"Passive Past Simple: was asked – yêu cầu ai đó làm gì."},
-{id:97,unit:10,topic:"vocab",q:"The band released their new <em>___</em> single last Friday.",o:["hit","member","work of art","exhibit"],a:0,ex:"'Hit' = bài hát/sản phẩm nổi tiếng."},
-{id:98,unit:10,topic:"grammar",q:"The children <em>___</em> told to be quiet during the exhibition.",o:["were","are","was","be"],a:0,ex:"Passive với 'tell sb to do': were told to be quiet."},
-{id:99,unit:10,topic:"vocab",q:"That painting is considered a great <em>___</em>.",o:["work of art","lead singer","fan club","band"],a:0,ex:"'Work of art' = tác phẩm nghệ thuật."},
-{id:100,unit:10,topic:"grammar",q:"She <em>___</em> made to sing the national anthem at the ceremony.",o:["was","were","has","had been"],a:0,ex:"Passive với 'make sb do': was made to do (bị động dùng 'to')."},
-
-// ── UNIT 11 – At Work (Present Perfect vs other tenses) ──
-{id:101,unit:11,topic:"vocab",q:"She submitted her <em>___</em> for the marketing position last week.",o:["resume","promotion","raise","contract"],a:0,ex:"'Resume' = CV/hồ sơ xin việc."},
-{id:102,unit:11,topic:"grammar",q:"I <em>___</em> this company for five years. I started in 2020.",o:["have worked","work","worked","am working"],a:0,ex:"Present Perfect: have worked for – từ 2020 đến nay vẫn làm."},
-{id:103,unit:11,topic:"vocab",q:"After three years, she finally got a <em>___</em> to senior manager.",o:["promotion","resume","field","contract"],a:0,ex:"'Promotion' = thăng chức."},
-{id:104,unit:11,topic:"grammar",q:"He <em>___</em> this job last year and is still working here.",o:["started","has started","starts","is starting"],a:0,ex:"Past Simple: started last year – thời gian xác định trong quá khứ."},
-{id:105,unit:11,topic:"vocab",q:"Working in an <em>___</em> requires creativity and strong communication skills.",o:["advertising agency","income tax","planning meeting","temporary position"],a:0,ex:"'Advertising agency' = công ty quảng cáo."},
-{id:106,unit:11,topic:"grammar",q:"<em>___</em> you ever attended a planning meeting before joining this company?",o:["Have","Did","Were","Do"],a:0,ex:"Present Perfect với 'ever': Have you ever attended? – hỏi kinh nghiệm."},
-{id:107,unit:11,topic:"vocab",q:"The company offered her a <em>___</em> position until a permanent role opens.",o:["temporary position","income tax","raise","experience"],a:0,ex:"'Temporary position' = vị trí tạm thời."},
-{id:108,unit:11,topic:"grammar",q:"She <em>___</em> three promotions since she joined the company.",o:["has received","received","was receiving","is receiving"],a:0,ex:"Present Perfect: has received – từ khi gia nhập đến nay."},
-{id:109,unit:11,topic:"vocab",q:"He negotiated a <em>___</em> after his excellent performance review.",o:["raise","client","contract","field"],a:0,ex:"'Raise' = tăng lương."},
-{id:110,unit:11,topic:"grammar",q:"She <em>___</em> in the IT field for over a decade.",o:["has been working","worked","works","was working"],a:0,ex:"Present Perfect (hoặc HTHT Tiếp diễn) nhấn mạnh thời gian kéo dài."},
-
-// ── UNIT 12 – Postal Services (Modal Verbs + Passive) ──
-{id:111,unit:12,topic:"vocab",q:"She sent the documents by <em>___</em> mail to make sure they arrived the next day.",o:["express","airmail","surface","postage"],a:0,ex:"'Express' = chuyển phát nhanh."},
-{id:112,unit:12,topic:"grammar",q:"This package <em>___</em> be wrapped carefully before mailing.",o:["should","have","is","are"],a:0,ex:"Modal + be + PII: should be wrapped – bị động với modal."},
-{id:113,unit:12,topic:"vocab",q:"The <em>___</em> on the letter was too low, so it was returned.",o:["postage","stamps","envelope","parcel"],a:0,ex:"'Postage' = bưu phí."},
-{id:114,unit:12,topic:"grammar",q:"The parcel <em>___</em> be delivered by tomorrow.",o:["must","should","can","will"],a:0,ex:"'Must' = bắt buộc – dùng khi cần nhấn mạnh yêu cầu."},
-{id:115,unit:12,topic:"vocab",q:"She put the letter in an <em>___</em> and sealed it.",o:["envelope","stamps","airmail","box"],a:0,ex:"'Envelope' = phong bì."},
-{id:116,unit:12,topic:"grammar",q:"The forms <em>___</em> be completed in ink.",o:["must","are","were","is"],a:0,ex:"Modal passive: must be completed."},
-{id:117,unit:12,topic:"vocab",q:"She collected a book of <em>___</em> from the post office.",o:["stamps","postage","surface mail","parcel"],a:0,ex:"'Stamps' = tem thư."},
-{id:118,unit:12,topic:"grammar",q:"The package <em>___</em> not be opened without permission.",o:["should","is","has","have"],a:0,ex:"Negative modal: should not be opened."},
-{id:119,unit:12,topic:"vocab",q:"Sending goods by <em>___</em> is cheaper but takes longer.",o:["surface mail","express","airmail","special delivery"],a:0,ex:"'Surface mail' = đường bộ/đường biển – chậm hơn nhưng rẻ hơn."},
-{id:120,unit:12,topic:"grammar",q:"This letter <em>___</em> be translated before it can be sent.",o:["may","must","have","are"],a:0,ex:"'May' hoặc 'must' đều dùng được; 'must be translated' mạnh hơn (bắt buộc)."},
-
-// ── UNIT 13 – Emergency / Road Accidents (Noun & Adverbial Clauses) ──
-{id:121,unit:13,topic:"vocab",q:"The driver was injured in the accident and was taken to the <em>___</em>.",o:["emergency room","ambulance","signal","broken leg"],a:0,ex:"'Emergency room' = phòng cấp cứu."},
-{id:122,unit:13,topic:"grammar",q:"I know <em>___</em> the accident happened.",o:["where","which","who","that"],a:0,ex:"Noun clause: know where (mệnh đề danh từ cung cấp thông tin)."},
-{id:123,unit:13,topic:"vocab",q:"The driver was driving on the <em>___</em>, which caused the head-on collision.",o:["wrong side of the road","over the speed limit","run out of gas","signal"],a:0,ex:"'Wrong side of the road' = sai làn đường."},
-{id:124,unit:13,topic:"grammar",q:"She called 113 <em>___</em> she saw the accident.",o:["because","although","where","who"],a:0,ex:"Adverbial clause of reason: because – giải thích lý do."},
-{id:125,unit:13,topic:"vocab",q:"The car <em>___</em> and stopped in the middle of the highway.",o:["ran out of gas","rushed","signaled","hurt"],a:0,ex:"'Ran out of gas' = hết xăng."},
-{id:126,unit:13,topic:"grammar",q:"Tell me <em>___</em> you were doing at the time of the accident.",o:["what","when","where","who"],a:0,ex:"Noun clause: tell me what (mệnh đề danh từ sau tell)."},
-{id:127,unit:13,topic:"vocab",q:"Speeding is <em>___</em> and can result in heavy fines.",o:["dangerous","serious","hurt","signal"],a:0,ex:"'Dangerous' = nguy hiểm."},
-{id:128,unit:13,topic:"grammar",q:"He failed his driving test <em>___</em> he didn't check his mirrors enough.",o:["because","although","when","which"],a:0,ex:"Adverbial clause of reason: because + clause."},
-{id:129,unit:13,topic:"vocab",q:"The <em>___</em> arrived quickly and took the injured driver to hospital.",o:["ambulance","signal","rush","accident"],a:0,ex:"'Ambulance' = xe cấp cứu."},
-{id:130,unit:13,topic:"grammar",q:"I don't know <em>___</em> the driver was speeding.",o:["whether","which","who","what"],a:0,ex:"Noun clause với 'whether': I don't know whether... – câu hỏi gián tiếp yes/no."},
-
-// ── UNIT 14 – Banking (Modal Verbs – obligation, permission, advice) ──
-{id:131,unit:14,topic:"vocab",q:"She went to the ATM to <em>___</em> some cash for the weekend.",o:["withdraw money","borrow","deposit","loan"],a:0,ex:"'Withdraw money' = rút tiền."},
-{id:132,unit:14,topic:"grammar",q:"You <em>___</em> keep your PIN number secret at all times.",o:["must","may","would","could"],a:0,ex:"'Must' = bắt buộc – giữ bí mật PIN là bắt buộc."},
-{id:133,unit:14,topic:"vocab",q:"He opened a <em>___</em> to save money for his education.",o:["savings account","debit card","overdraft","compound interest"],a:0,ex:"'Savings account' = tài khoản tiết kiệm."},
-{id:134,unit:14,topic:"grammar",q:"You <em>___</em> take out a loan if you can't afford the fees.",o:["could","must","shall","need"],a:0,ex:"'Could' = gợi ý/khả năng – bạn có thể vay tiền."},
-{id:135,unit:14,topic:"vocab",q:"He had to pay a <em>___</em> because he didn't maintain the minimum balance.",o:["maintenance fee","cash","loan","deposit"],a:0,ex:"'Maintenance fee' = phí duy trì tài khoản."},
-{id:136,unit:14,topic:"grammar",q:"You <em>___</em> check your bank balance regularly to avoid an overdraft.",o:["should","must to","can to","have"],a:0,ex:"'Should' = lời khuyên – nên kiểm tra số dư định kỳ."},
-{id:137,unit:14,topic:"vocab",q:"A <em>___</em> earns interest on the interest you have already earned.",o:["compound interest","debit card","checking account","borrow"],a:0,ex:"'Compound interest' = lãi kép – lãi được tính trên cả vốn và lãi cũ."},
-{id:138,unit:14,topic:"grammar",q:"Students <em>___</em> borrow textbooks from the library without paying.",o:["can","must","ought","have to"],a:0,ex:"'Can' = cho phép – được phép mượn."},
-{id:139,unit:14,topic:"vocab",q:"Her account went into <em>___</em> after she spent more than she had.",o:["overdraft","cash dispenser","deposit","loan"],a:0,ex:"'Overdraft' = thâm hụt tài khoản."},
-{id:140,unit:14,topic:"grammar",q:"You <em>___</em> to pay your credit card bill by the due date.",o:["ought","may","can","will"],a:0,ex:"'Ought to' = nên (lời khuyên): ought to pay."},
-
-// ── UNIT 15 – Gadgets (Future Tenses) ──
-{id:141,unit:15,topic:"vocab",q:"Don't forget to bring your <em>___</em> – your phone is almost dead.",o:["charger","gadget","app","storage"],a:0,ex:"'Charger' = cục sạc điện thoại."},
-{id:142,unit:15,topic:"grammar",q:"Look at those clouds – it <em>___</em> to rain soon.",o:["is going","will","goes","would"],a:0,ex:"'Be going to' + bằng chứng hiện tại: is going to rain."},
-{id:143,unit:15,topic:"vocab",q:"She downloaded a useful <em>___</em> to help manage her study schedule.",o:["app","trend","hackathon","programmer"],a:0,ex:"'App' = ứng dụng điện thoại."},
-{id:144,unit:15,topic:"grammar",q:"This time next year, she <em>___</em> working as a software programmer.",o:["will be","is going to","is","will"],a:0,ex:"Future Continuous: will be working – hành động đang diễn ra vào thời điểm tương lai."},
-{id:145,unit:15,topic:"vocab",q:"The new <em>___</em> has more storage and a better camera than the old model.",o:["smartphone","charger","tablet","laptop"],a:0,ex:"'Smartphone' = điện thoại thông minh."},
-{id:146,unit:15,topic:"grammar",q:"I think electric cars <em>___</em> replace petrol cars in the future.",o:["will","are going to","would","are"],a:0,ex:"'Will' = dự đoán không có bằng chứng cụ thể."},
-{id:147,unit:15,topic:"vocab",q:"She participates in a <em>___</em> every year to improve her coding skills.",o:["hackathon","gadget","trend","digital device"],a:0,ex:"'Hackathon' = cuộc thi lập trình marathon."},
-{id:148,unit:15,topic:"grammar",q:"They <em>___</em> launch the new app next Monday.",o:["are going to","will be","were","is"],a:0,ex:"'Be going to' – kế hoạch đã được quyết định trước: are going to launch."},
-{id:149,unit:15,topic:"vocab",q:"The <em>___</em> of using artificial intelligence in everyday life is growing rapidly.",o:["trend","storage","digital camera","tablet"],a:0,ex:"'Trend' = xu hướng."},
-{id:150,unit:15,topic:"grammar",q:"This time tomorrow, the programmers <em>___</em> presenting their new gadget.",o:["will be","are going to","would","will"],a:0,ex:"Future Continuous: will be presenting – hành động đang xảy ra vào thời điểm cụ thể trong tương lai."},
-
-// ── MIXED GRAMMAR REVIEW 151–180 ──
-{id:151,unit:0,topic:"grammar",q:"She is <em>___</em> student in the class. No one studies harder than her.",o:["the hardest-working","harder-working","as hard-working as","more hard-working"],a:0,ex:"Superlative: the hardest-working – so sánh nhất."},
-{id:152,unit:0,topic:"grammar",q:"The exam was <em>___</em> than we expected.",o:["more difficult","most difficult","as difficult","difficult than"],a:0,ex:"Comparative: more difficult than."},
-{id:153,unit:0,topic:"grammar",q:"<em>___</em> harder you study, <em>___</em> better your results will be.",o:["The / the","A / a","More / more","As / as"],a:0,ex:"Double comparative: The + comparative, the + comparative."},
-{id:154,unit:0,topic:"grammar",q:"Her new laptop is not <em>___</em> fast <em>___</em> her old desktop.",o:["as / as","so / than","more / as","as / than"],a:0,ex:"Negative equality: not as…as = không bằng."},
-{id:155,unit:0,topic:"grammar",q:"The package <em>___</em> be sent today without fail.",o:["must","may","can","could"],a:0,ex:"'Must' = bắt buộc – không thể bỏ qua."},
-{id:156,unit:0,topic:"grammar",q:"She <em>___</em> have her phone repaired – the screen is cracked.",o:["needs to","need","needs","is needed"],a:0,ex:"'Need to + V' = cần phải."},
-{id:157,unit:0,topic:"grammar",q:"This is the book <em>___</em> changed my life.",o:["that","who","whom","whose"],a:0,ex:"'That' thay thế cho vật (book) làm chủ ngữ."},
-{id:158,unit:0,topic:"grammar",q:"The engineer <em>___</em> designed this bridge won an award.",o:["who","which","that","whose"],a:0,ex:"'Who' thay thế cho người làm chủ ngữ."},
-{id:159,unit:0,topic:"grammar",q:"She doesn't know <em>___</em> she should apply for the job.",o:["whether","which","that","what"],a:0,ex:"Noun clause với yes/no question gián tiếp: whether she should."},
-{id:160,unit:0,topic:"grammar",q:"We were told <em>___</em> the meeting was postponed.",o:["that","what","which","where"],a:0,ex:"Noun clause sau 'told': told that…"},
-{id:161,unit:0,topic:"grammar",q:"<em>___</em> she passed the exam was a surprise to everyone.",o:["That","What","Which","Whether"],a:0,ex:"'That' mở đầu noun clause làm chủ ngữ."},
-{id:162,unit:0,topic:"grammar",q:"I have been waiting <em>___</em> two hours.",o:["for","since","in","from"],a:0,ex:"'For + period of time': for two hours."},
-{id:163,unit:0,topic:"grammar",q:"She has lived here <em>___</em> 2018.",o:["since","for","from","in"],a:0,ex:"'Since + point in time': since 2018."},
-{id:164,unit:0,topic:"grammar",q:"He <em>___</em> finish the report by tomorrow or he will lose his job.",o:["must","may","could","might"],a:0,ex:"'Must' = bắt buộc phải làm."},
-{id:165,unit:0,topic:"grammar",q:"You <em>___</em> eat in the library. It is not allowed.",o:["shouldn't","can","may","should"],a:0,ex:"'Shouldn't' = không nên (cấm đoán lịch sự)."},
-{id:166,unit:0,topic:"grammar",q:"The emails <em>___</em> be answered within 24 hours.",o:["should","are","have","is"],a:0,ex:"Modal passive: should be answered."},
-{id:167,unit:0,topic:"grammar",q:"The project <em>___</em> be completed by the team next week.",o:["will","is","have","was"],a:0,ex:"Future passive: will be completed."},
-{id:168,unit:0,topic:"grammar",q:"She told me <em>___</em> the deadline was.",o:["what","which","who","that"],a:0,ex:"Noun clause: told me what – hỏi thông tin."},
-{id:169,unit:0,topic:"grammar",q:"The reason <em>___</em> she was absent is still unknown.",o:["why","which","who","when"],a:0,ex:"'Why' thay thế cho lý do trong relative clause."},
-{id:170,unit:0,topic:"grammar",q:"He drives <em>___</em> carefully <em>___</em> his sister does.",o:["as / as","more / than","most / of","so / as"],a:0,ex:"Equality: as…as – lái xe cẩn thận bằng chị gái."},
-{id:171,unit:0,topic:"grammar",q:"My phone is <em>___</em> than yours. Mine has 256GB.",o:["faster","more storage","bigger storage","much more storage"],a:3,ex:"Comparative: much more storage – so sánh hơn nhấn mạnh."},
-{id:172,unit:0,topic:"grammar",q:"They asked her <em>___</em> she could join the online meeting.",o:["if","that","what","when"],a:0,ex:"Noun clause sau 'asked': asked if – câu hỏi gián tiếp."},
-{id:173,unit:0,topic:"grammar",q:"The museum <em>___</em> the most popular tourist site in the city.",o:["is considered","considers","consider","was considering"],a:0,ex:"Passive Present Simple: is considered."},
-{id:174,unit:0,topic:"grammar",q:"He avoided <em>___</em> to his boss about the mistake.",o:["talking","to talk","talk","talked"],a:0,ex:"'Avoid + Ving': avoid talking."},
-{id:175,unit:0,topic:"grammar",q:"She managed <em>___</em> the assignment on time.",o:["to complete","completing","complete","completed"],a:0,ex:"'Manage + to V': manage to complete."},
-{id:176,unit:0,topic:"grammar",q:"The manager made the staff <em>___</em> overtime on weekends.",o:["work","to work","working","worked"],a:0,ex:"'Make sb do' (bare infinitive) – active. Passive: was made to work."},
-{id:177,unit:0,topic:"grammar",q:"This is the city <em>___</em> the international gadget expo was held.",o:["where","when","which","who"],a:0,ex:"'Where' thay thế cho địa điểm."},
-{id:178,unit:0,topic:"grammar",q:"She has been studying <em>___</em> she woke up this morning.",o:["since","for","from","in"],a:0,ex:"'Since + point in time': since she woke up."},
-{id:179,unit:0,topic:"grammar",q:"<em>___</em> the weather is bad, the outdoor event will be cancelled.",o:["If","Because","Although","When"],a:0,ex:"First Conditional: If…will – điều kiện có thể xảy ra."},
-{id:180,unit:0,topic:"grammar",q:"The homework <em>___</em> by all students before class.",o:["must be done","must do","must doing","must be doing"],a:0,ex:"Modal passive: must be done."},
-
-// ── MIXED VOCABULARY REVIEW 181–200 ──
-{id:181,unit:0,topic:"vocab",q:"She felt <em>___</em> after missing her flight and losing her luggage.",o:["stressed","relaxed","calm","excited"],a:0,ex:"'Stressed' = căng thẳng – hợp lý khi gặp nhiều vấn đề liên tiếp."},
-{id:182,unit:0,topic:"vocab",q:"The new policy <em>___</em> employees to work from home three days a week.",o:["allows","symbolizes","gathers","organizes"],a:0,ex:"'Allows' = cho phép."},
-{id:183,unit:0,topic:"vocab",q:"She is fluent in three languages and works as a <em>___</em> at the United Nations.",o:["interpreter","programmer","usher","lead singer"],a:0,ex:"'Interpreter' = phiên dịch viên – công việc sử dụng đa ngôn ngữ."},
-{id:184,unit:0,topic:"vocab",q:"The <em>___</em> camera took stunning shots of the lightning storm.",o:["digital","renewable","formal","annual"],a:0,ex:"'Digital camera' = máy ảnh kỹ thuật số."},
-{id:185,unit:0,topic:"vocab",q:"She received a scholarship to study <em>___</em> at a top university in Japan.",o:["overseas","homesick","bilingual","formal"],a:0,ex:"'Overseas' = ở nước ngoài."},
-{id:186,unit:0,topic:"vocab",q:"The bank offered him a low-interest <em>___</em> to buy a new house.",o:["loan","withdraw","overdraft","stamp"],a:0,ex:"'Loan' = khoản vay."},
-{id:187,unit:0,topic:"vocab",q:"She bought a <em>___</em> at the post office to send her parcel abroad.",o:["stamp","envelope","checkbook","airmail"],a:0,ex:"'Stamp' = tem thư – dán lên bì thư."},
-{id:188,unit:0,topic:"vocab",q:"The city was decorated with lights and <em>___</em> for the New Year celebration.",o:["fireworks","sculptures","collections","programs"],a:0,ex:"'Fireworks' = pháo hoa."},
-{id:189,unit:0,topic:"vocab",q:"She was nervous before her <em>___</em> for the lead role in the musical.",o:["audition","usher","curtain","part"],a:0,ex:"'Audition' = buổi thử tài."},
-{id:190,unit:0,topic:"vocab",q:"The emergency <em>___</em> rushed to the scene of the road accident.",o:["ambulance","package","gadget","band"],a:0,ex:"'Ambulance' = xe cấp cứu."},
-{id:191,unit:0,topic:"vocab",q:"She signed a one-year <em>___</em> with the advertising agency.",o:["contract","raise","income","assignment"],a:0,ex:"'Contract' = hợp đồng."},
-{id:192,unit:0,topic:"vocab",q:"The <em>___</em> was late because of heavy traffic and bad weather.",o:["special delivery","surface mail","stamps","airmail"],a:0,ex:"'Special delivery' = chuyển phát đặc biệt."},
-{id:193,unit:0,topic:"vocab",q:"She stored all her photos on a cloud <em>___</em> service.",o:["storage","charger","trend","app"],a:0,ex:"'Storage' = lưu trữ dữ liệu."},
-{id:194,unit:0,topic:"vocab",q:"Learning about different cultures helps you become more <em>___</em>.",o:["open-minded","monolingual","formal","bored"],a:0,ex:"'Open-minded' = cởi mở – kết quả của việc học về văn hóa mới."},
-{id:195,unit:0,topic:"vocab",q:"The weather <em>___</em> warned residents about the approaching typhoon.",o:["report","flood","lightning","thunder"],a:0,ex:"'Weather report' = bản tin dự báo thời tiết."},
-{id:196,unit:0,topic:"vocab",q:"She applied for a student exchange program to improve her <em>___</em> and cultural skills.",o:["vocabulary","symptom","degree","promotion"],a:0,ex:"'Vocabulary' = vốn từ vựng."},
-{id:197,unit:0,topic:"vocab",q:"He forgot to pay his <em>___</em> on time and was charged a late fee.",o:["electricity bill","savings account","loan","postage"],a:0,ex:"'Electricity bill' = hóa đơn tiền điện."},
-{id:198,unit:0,topic:"vocab",q:"The art gallery opened a new <em>___</em> featuring works by local artists.",o:["exhibition","attendance","hit","fan club"],a:0,ex:"'Exhibition' = triển lãm."},
-{id:199,unit:0,topic:"vocab",q:"She got a <em>___</em> degree after completing her four-year university program.",o:["bachelor's","diploma","certificate","grade"],a:0,ex:"'Bachelor's degree' = bằng cử nhân – sau 4 năm đại học."},
-{id:200,unit:0,topic:"vocab",q:"The new smartphone <em>___</em> shows a rise in demand for mobile devices.",o:["trend","charger","gadget","app"],a:0,ex:"'Trend' = xu hướng – cho thấy sự gia tăng nhu cầu."},
-];
-
-// ─────────────────────────────────────────────
-//  STATE
-// ─────────────────────────────────────────────
-let answered = {}; // id -> {selected, correct}
-let currentFilter = 'all';
-
-function unitOf(q){ return q.unit; }
-
-function matchesFilter(q, f){
-  if(f === 'all') return true;
-  if(f === 'grammar') return q.topic === 'grammar';
-  if(f === 'vocab') return q.topic === 'vocab';
-  const [a,b] = f.split('-').map(Number);
-  return q.unit >= a && q.unit <= b;
-}
-
-// ─────────────────────────────────────────────
-//  RENDER
-// ─────────────────────────────────────────────
-function renderAll(){
-  const list = document.getElementById('questions-list');
-  list.innerHTML = '';
-  QUESTIONS.forEach(q => {
-    const div = document.createElement('div');
-    div.className = 'qcard' + (matchesFilter(q, currentFilter) ? '' : ' hidden');
-    div.id = 'qcard-' + q.id;
-
-    const unitLabel = q.unit === 0 ? 'Ôn tổng hợp' : 'Unit ' + q.unit;
-    const topicLabel = q.topic === 'grammar' ? '📚 Ngữ pháp' : '📖 Từ vựng';
-
-    const ans = answered[q.id];
-    if(ans){
-      div.classList.add(ans.correct ? 'answered-correct' : 'answered-wrong');
-    }
-
-    div.innerHTML = `
-      <div class="q-meta">
-        <span class="q-num">Câu ${q.id}</span>
-        <span class="q-unit">${unitLabel}</span>
-        <span class="q-topic">${topicLabel}</span>
-      </div>
-      <div class="q-text">${q.q}</div>
-      <div class="options" id="opts-${q.id}">
-        ${q.o.map((opt,i) => {
-          let cls = 'option';
-          if(ans){
-            cls += ' disabled';
-            if(i === q.a) cls += ' correct';
-            else if(i === ans.selected) cls += ' wrong';
-          }
-          return `<button class="${cls}" onclick="answer(${q.id},${i})">${String.fromCharCode(65+i)}. ${opt}</button>`;
-        }).join('')}
-      </div>
-      <div class="q-feedback ${ans ? (ans.correct ? 'correct-fb' : 'wrong-fb') + ' show' : ''}" id="fb-${q.id}">
-        ${ans ? (ans.correct ? '✅ Chính xác! ' : '❌ Sai rồi! ') + q.ex : q.ex}
-      </div>
-    `;
-    list.appendChild(div);
-  });
-  updateStats();
-}
-
-function answer(id, selected){
-  if(answered[id]) return;
-  const q = QUESTIONS.find(x => x.id === id);
-  const correct = selected === q.a;
-  answered[id] = { selected, correct };
-
-  // update card
-  const card = document.getElementById('qcard-'+id);
-  card.classList.add(correct ? 'answered-correct' : 'answered-wrong');
-  const opts = document.querySelectorAll(`#opts-${id} .option`);
-  opts.forEach((btn, i) => {
-    btn.classList.add('disabled');
-    if(i === q.a) btn.classList.add('correct');
-    else if(i === selected) btn.classList.add('wrong');
-    btn.onclick = null;
-  });
-  const fb = document.getElementById('fb-'+id);
-  fb.textContent = (correct ? '✅ Chính xác! ' : '❌ Sai rồi! ') + q.ex;
-  fb.className = 'q-feedback show ' + (correct ? 'correct-fb' : 'wrong-fb');
-
-  updateStats();
-  checkDone();
-}
-
-function updateStats(){
-  const total = QUESTIONS.length;
-  const done = Object.keys(answered).length;
-  const correct = Object.values(answered).filter(a => a.correct).length;
-  const acc = done ? Math.round(correct/done*100) : 0;
-
-  document.getElementById('s-done').textContent = done;
-  document.getElementById('s-correct').textContent = correct;
-  document.getElementById('s-acc').textContent = acc + '%';
-
-  const pct = Math.round(done/total*100);
-  document.getElementById('prog-fill').style.width = pct + '%';
-  document.getElementById('prog-text').textContent = done + ' / ' + total + ' câu';
-}
-
-function checkDone(){
-  const done = Object.keys(answered).length;
-  if(done === QUESTIONS.length){
-    const correct = Object.values(answered).filter(a => a.correct).length;
-    const score = (correct/QUESTIONS.length*10).toFixed(1);
-    document.getElementById('result-score').textContent = score + ' / 10';
-    const pct = Math.round(correct/QUESTIONS.length*100);
-    let msg = '';
-    if(pct >= 90) msg = '🏆 Xuất sắc! Bạn sẵn sàng cho kỳ thi rồi!';
-    else if(pct >= 75) msg = '👍 Tốt lắm! Ôn thêm một chút nữa là hoàn hảo.';
-    else if(pct >= 55) msg = '📖 Cần cố gắng thêm – ôn lại ngữ pháp và từ vựng nhé!';
-    else msg = '💪 Hãy ôn lại từ đầu, bạn có thể làm tốt hơn!';
-    document.getElementById('result-msg').textContent = `${correct}/${QUESTIONS.length} câu đúng (${pct}%) • ${msg}`;
-    document.getElementById('result-banner').style.display = 'block';
-    scrollToResult();
+function diamond(x,y,w,h,cls,extraCls){
+  const hw=w/2,hh=h/2;
+  const pts=`${x},${y-hh} ${x+hw},${y} ${x},${y+hh} ${x-hw},${y}`;
+  let path=`<polygon points="${pts}" class="${cls}"`;
+  if(extraCls) path+=` style="stroke-width:2.5"`;
+  path+=`/>`;
+  if(extraCls){
+    const s=8,pts2=`${x},${y-hh-s} ${x+hw+s},${y} ${x},${y+hh+s} ${x-hw-s},${y}`;
+    path=`<polygon points="${pts2}" class="rel-fill" style="fill:none;stroke:#C55A11;stroke-width:1.5"/>`+path;
   }
+  return path;
 }
 
-function scrollToResult(){
-  const el = document.getElementById('result-banner');
-  if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+function ellipse(x,y,rx,ry,cls,double_,dashed){
+  let el='';
+  if(double_) el+=`<ellipse cx="${x}" cy="${y}" rx="${rx+7}" ry="${ry+5}" class="${cls}" style="fill:none"/>`;
+  el+=`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" class="${cls}"${dashed?' style="stroke-dasharray:4 3"':''}/>`;
+  return el;
 }
 
-function resetAll(){
-  answered = {};
-  document.getElementById('result-banner').style.display = 'none';
-  renderAll();
-  window.scrollTo({top:0, behavior:'smooth'});
-}
+function renderDiagram(key){
+  const d=diagrams[key];
+  if(!d) return;
+  const svg=document.getElementById('ersvg');
+  svg.setAttribute('viewBox',d.vb);
+  let html='<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>';
 
-function filterBy(f, btn){
-  currentFilter = f;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.qcard').forEach(card => {
-    const id = parseInt(card.id.replace('qcard-',''));
-    const q = QUESTIONS.find(x => x.id === id);
-    card.classList.toggle('hidden', !matchesFilter(q, f));
+  // attr connection lines
+  d.attrs.forEach(a=>{
+    const tx=a.tx||0,ty=a.ty||0;
+    html+=`<line x1="${a.x}" y1="${a.y}" x2="${tx}" y2="${ty}" class="conn" opacity="0.5"/>`;
   });
+
+  // rel connection lines + cardinality
+  d.rels.forEach(r=>{
+    r.conns.forEach(c=>{
+      const ex=c.cx2,ey=c.cy2;
+      html+=`<line x1="${c.cx1}" y1="${c.cy1}" x2="${ex}" y2="${ey}" class="conn"/>`;
+      if(c.card){
+        const mx=c.cx1+(c.cx2-c.cx1)*0.7, my=c.cy1+(c.cy2-c.cy1)*0.7;
+        html+=`<text class="card" x="${mx}" y="${my}">${c.card}</text>`;
+      }
+    });
+  });
+
+  // entities
+  d.entities.forEach(e=>{
+    const w=110,h=36;
+    const rx=e.x-w/2,ry=e.y-h/2;
+    if(e.weak){
+      html+=`<rect x="${rx-5}" y="${ry-5}" width="${w+10}" height="${h+10}" rx="6" class="weak-outer"/>`;
+      html+=`<rect x="${rx}" y="${ry}" width="${w}" height="${h}" rx="4" class="weak-rect"/>`;
+    } else {
+      html+=`<rect x="${rx}" y="${ry}" width="${w}" height="${h}" rx="4" class="ent-rect"/>`;
+    }
+    html+=`<text class="ent-text" x="${e.x}" y="${e.y}">${e.label}</text>`;
+  });
+
+  // relationships
+  d.rels.forEach(r=>{
+    html+=diamond(r.x,r.y,80,36,'rel-fill',r.weak);
+    html+=`<text class="rel-text" x="${r.x}" y="${r.y}">${r.label}</text>`;
+  });
+
+  // attributes
+  d.attrs.forEach(a=>{
+    const rx=22,ry=13;
+    const cls=a.key?'key-fill':(a.multi?'multi-fill':'attr-fill');
+    html+=ellipse(a.x,a.y,rx,ry,cls,a.multi,a.derived);
+    if(a.key){
+      html+=`<text class="attr-text" x="${a.x}" y="${a.y}" style="text-decoration:underline">${a.label}</text>`;
+    } else {
+      html+=`<text class="attr-text" x="${a.x}" y="${a.y}">${a.label}</text>`;
+    }
+  });
+
+  svg.innerHTML=html;
 }
 
-// FAB scroll button
-window.addEventListener('scroll', () => {
-  document.getElementById('fab').style.display = window.scrollY > 400 ? 'flex' : 'none';
+// Build tabs
+const tabsEl=document.getElementById('tabs');
+const keys=Object.keys(diagrams);
+keys.forEach((k,i)=>{
+  const btn=document.createElement('button');
+  btn.className='tab'+(i===0?' active':'');
+  btn.textContent=k;
+  btn.onclick=()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    btn.classList.add('active');
+    renderDiagram(k);
+  };
+  tabsEl.appendChild(btn);
 });
-
-// init
-renderAll();
+renderDiagram(keys[0]);
 </script>
-</body>
-</html>
